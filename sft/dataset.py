@@ -1,27 +1,32 @@
-from pathlib import Path
-from typing import Dict, List
-
 import json
 from datasets import load_dataset
 from transformers import PreTrainedTokenizerBase
+from sft.sft_config import TRAIN_JSON_PATH, VAL_JSON_PATH, MAX_SEQ_LENGTH
 
-from .sft_config import TRAIN_JSON_PATH, VAL_JSON_PATH, MAX_SEQ_LENGTH
+# ---------------------------------------------------------
+# Load processed JSONL datasets
+# ---------------------------------------------------------
 
 def load_sft_datasets():
     train = load_dataset(
         "json",
-        data_files=TRAIN_JSON_PATH,
+        data_files={"train": TRAIN_JSON_PATH},
         split="train"
     )
+
     val = load_dataset(
         "json",
-        data_files=VAL_JSON_PATH,
-        split="train"
+        data_files={"val": VAL_JSON_PATH},
+        split="val"
     )
+
     return train, val
 
-def tokenize_function(example: Dict, tokenizer: PreTrainedTokenizerBase):
-    # concatenate prompt + response and compute loss only on response tokens later
+# ---------------------------------------------------------
+# Tokenization function for Trainer
+# ---------------------------------------------------------
+
+def tokenize_function(example, tokenizer):
     prompt = example["prompt"]
     response = example["response"]
 
@@ -31,9 +36,15 @@ def tokenize_function(example: Dict, tokenizer: PreTrainedTokenizerBase):
         full_text,
         max_length=MAX_SEQ_LENGTH,
         truncation=True,
-        padding=False,
+        padding="max_length",
     )
 
-    # For now, set labels = input_ids; Trainer can handle ignoring certain positions later
-    tokenized["labels"] = tokenized["input_ids"].copy()
+    # Mask pad tokens in labels
+    labels = tokenized["input_ids"].copy()
+    labels = [
+        -100 if token == tokenizer.pad_token_id else token
+        for token in labels
+    ]
+    tokenized["labels"] = labels
+
     return tokenized
