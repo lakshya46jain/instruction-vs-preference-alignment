@@ -1,3 +1,27 @@
+# Python
 __pycache__/
 *.pyc
-*.ipynb_checkpoints
+*.pyo
+*.pyd
+
+# Virtual environment
+sft-env/
+venv/
+env/
+
+# Model outputs
+outputs/
+checkpoint-*/
+
+# HuggingFace cache
+~/.cache/huggingface/
+.cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS-generated
+.DS_Store
+
+# pyenv (optional but recommended)
+.python-version
