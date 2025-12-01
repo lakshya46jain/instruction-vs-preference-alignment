@@ -25,53 +25,44 @@ def load_json(path: Path):
     with path.open() as f:
         return json.load(f)
 
-def make_examples():
+def main():
     alpaca = load_json(RAW_DIR / "alpaca_data.json")
     cleaned = load_json(RAW_DIR / "cleaned_data.json")
 
     all_data = alpaca + cleaned
 
-    # shuffle
     random.seed(SEED)
     random.shuffle(all_data)
 
     examples = []
     for ex in all_data:
-        instr = ex.get("instruction", "").strip()
-        inp = ex.get("input", "").strip()
-        out = ex.get("output", "").strip()
+        instruction = ex.get("instruction", "").strip()
+        input_text = ex.get("input", "").strip() or ""
+        output = ex.get("output", "").strip()
 
         prompt = PROMPT_TEMPLATE.format(
-            instruction=instr,
-            input=inp if inp != "" else " "
+            instruction=instruction,
+            input=input_text,
         )
 
-        examples.append({
-            "prompt": prompt,
-            "response": out
-        })
+        examples.append({"prompt": prompt, "response": output})
 
-    return examples
-
-def train_val_split(examples):
-    n = len(examples)
-    n_train = int(TRAIN_RATIO * n)
+    # Split
+    n_train = int(len(examples) * TRAIN_RATIO)
     train = examples[:n_train]
     val = examples[n_train:]
-    return train, val
 
-def write_jsonl(path: Path, data):
-    with path.open("w", encoding="utf-8") as f:
-        for ex in data:
+    # Write JSONL
+    with TRAIN_OUT.open("w", encoding="utf-8") as f:
+        for ex in train:
             f.write(json.dumps(ex, ensure_ascii=False) + "\n")
 
-def main():
-    examples = make_examples()
-    train, val = train_val_split(examples)
-    write_jsonl(TRAIN_OUT, train)
-    write_jsonl(VAL_OUT, val)
-    print(f"Train: {len(train)} examples")
-    print(f"Val:   {len(val)} examples")
+    with VAL_OUT.open("w", encoding="utf-8") as f:
+        for ex in val:
+            f.write(json.dumps(ex, ensure_ascii=False) + "\n")
+
+    print("Train:", len(train))
+    print("Val:", len(val))
 
 if __name__ == "__main__":
     main()
