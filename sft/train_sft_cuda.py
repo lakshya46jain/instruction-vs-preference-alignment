@@ -86,7 +86,12 @@ def main():
         weight_decay=WEIGHT_DECAY,
         logging_dir=LOG_DIR,
         logging_steps=LOGGING_STEPS,
+
         fp16=True,          # universal safe default for CUDA
+        save_strategy="steps",
+        save_steps=500,
+        save_total_limit=3,
+
         report_to=["none"],
         seed=SEED,
     )

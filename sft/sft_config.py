@@ -15,7 +15,7 @@ VAL_JSON_PATH   = os.path.join(PROJECT_ROOT, "data/processed/sft_val.jsonl")
 BASE_MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
 # Training sequence length
-MAX_SEQ_LENGTH = 1024
+MAX_SEQ_LENGTH = 512
 
 # LoRA config — used by BOTH Mac (LoRA) AND GPU (QLoRA) scripts
 LORA_R = 8
@@ -27,7 +27,7 @@ LORA_TARGET_MODULES = ["q_proj", "v_proj"]
 BATCH_SIZE = 2               # Mac-friendly; increase on GPU if needed
 GRADIENT_ACCUM = 4
 LEARNING_RATE = 2e-4
-NUM_EPOCHS = 3
+MAX_STEPS = 5000
 WARMUP_RATIO = 0.1
 WEIGHT_DECAY = 0.01
 

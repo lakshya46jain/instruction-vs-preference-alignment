@@ -4,13 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Virtual environment
-sft-env/
-venv/
-env/
-
 # Model outputs
-outputs/
 checkpoint-*/
 
 # HuggingFace cache

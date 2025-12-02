@@ -82,11 +82,18 @@ def main():
         per_device_eval_batch_size=BATCH_SIZE,
         gradient_accumulation_steps=GRADIENT_ACCUM,
         learning_rate=LEARNING_RATE,
-        num_train_epochs=NUM_EPOCHS,
+
         warmup_ratio=WARMUP_RATIO,
         weight_decay=WEIGHT_DECAY,
         logging_dir=LOG_DIR,
         logging_steps=LOGGING_STEPS,
+
+        max_steps=5000,
+
+        save_strategy="steps",
+        save_steps=500,
+        save_total_limit=3,
+
         report_to=["none"],
         seed=SEED,
     )
