@@ -1,0 +1,52 @@
+Tokenizer loaded.
+Base model loaded.
+Using patched adapter directory: models/sft_output_eval
+SFT model loaded.
+
+====================================================================================================
+PROMPT 1: Explain the difference between instruction tuning and preference-based alignment in 3 bullet points.
+
+---- BASE MODEL OUTPUT ----
+1. Instruction tuning: This is the process of adjusting the tuning parameters of a musical instrument to achieve the desired sound. It involves analyzing the instrument's characteristics, such as pitch, volume, and tone, and adjusting the parameters to achieve the desired sound.
+
+2. Preference-based alignment: This is the process of aligning the instrument's tuning with the listener's preferences. It involves using a system that takes into account the listener's preferences and adjusts the instrument's tuning to achieve a more harmonious sound.
+
+3. Difference: Instruction tuning is a process that involves analyzing the instrument's characteristics and adjusting the tuning parameters to achieve a specific sound. Preference-based alignment, on the other hand, involves using a system that takes into account the listener's preferences and adjusts the instrument's tuning to achieve a more harmonious sound
+
+---- SFT MODEL OUTPUT ----
+1. Instruction tuning: This is the process of adjusting the instruction to match the learner's level of understanding.
+
+2. Preference-based alignment: This is the process of aligning the instruction to the learner's preferences.
+
+3. Instruction tuning and preference-based alignment: This is the process of adjusting the instruction to match the learner's level of understanding while also taking into account their preferences.
+
+
+====================================================================================================
+PROMPT 2: Summarize reinforcement learning from human feedback (RLHF) in two concise sentences.
+
+---- BASE MODEL OUTPUT ----
+RLHF is a reinforcement learning algorithm that uses human feedback to improve its performance. It learns from the feedback provided by humans and adjusts its behavior accordingly.
+
+---- SFT MODEL OUTPUT ----
+Reinforcement learning from human feedback (RLHF) is a technique that uses human feedback to improve the performance of a machine learning model. It involves training the model to learn from human feedback and adjust its behavior accordingly. This technique can be used to improve the accuracy and efficiency of machine learning models in a variety of applications.
+
+
+====================================================================================================
+PROMPT 3: List three benefits of supervised fine-tuning (SFT) for small language models.
+
+---- BASE MODEL OUTPUT ----
+1. Improved performance: SFT can help small language models achieve better performance on downstream tasks by fine-tuning the model on a larger dataset.
+
+2. Reduced training time: SFT can reduce the training time of small language models by fine-tuning the model on a smaller dataset.
+
+3. Enhanced generalization: SFT can improve the generalization ability of small language models by fine-tuning the model on a larger dataset.
+
+Overall, SFT can be a valuable tool for improving the performance and generalization ability of small language models.
+
+---- SFT MODEL OUTPUT ----
+1. Increased accuracy: SFT can help improve the accuracy of small language models by fine-tuning them on a larger dataset.
+
+2. Improved generalization: SFT can help improve the generalization ability of small language models by fine-tuning them on a larger dataset.
+
+3. Reduced training time: SFT can help reduce the training time of small language models by fine-tuning them on a larger dataset.
+
