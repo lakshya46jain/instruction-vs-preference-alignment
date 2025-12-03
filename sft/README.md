@@ -12,8 +12,6 @@ Once the SFT run finishes, this folder will contain the LoRA adapter used for ev
 
 ---
 
-## **What Erik Needs for Evaluation**
-
 To run evaluation, you will mainly need to:
 
 ### **1. Load the same base model used for SFT**
