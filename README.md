@@ -205,23 +205,6 @@ models/sft_output/
 
 ---
 
-# Step 4 — Evaluate SFT Model (Optional)
-
-To compare base vs SFT outputs:
-
-```bash
-python -m sft.eval_sft
-```
-
-This script loads:
-
-- Base model
-- SFT LoRA adapter
-
-and prints side-by-side generations.
-
----
-
 # Training Notes
 
 - All padding and label masking are handled in `dataset.py`
