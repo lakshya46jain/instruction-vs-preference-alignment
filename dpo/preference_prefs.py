@@ -1,37 +1,33 @@
-from datasets import load_dataset
 import json
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
 import os
 
-#Make sure output directories exist
+# Loading SFT model for generating outputs
+model_path = "models/sft_output"
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+model = AutoModelForCausalLM.from_pretrained(model_path).to("cuda" if torch.cuda.is_available() else "cpu")
+
 os.makedirs("data/processed", exist_ok=True)
 
-print("Loading HH-RLHF dataset...")
-ds = load_dataset("Anthropic/hh-rlhf")
+# Loading SFT dataset
+sft_data = [json.loads(line) for line in open("data/processed/sft_train.jsonl", "r")]
 
-# Split into train and validation
-train_data = ds["train"]  # typically use 'train' split
-val_data = ds["test"] if "test" in ds else ds["train"].select(range(100))  # small val set
+def generate_alt_response(prompt, max_new_tokens=200, temperature=1.2):
+    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    output = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=True, temperature=temperature)
+    return tokenizer.decode(output[0], skip_special_tokens=True)
 
-# Convert to DPO preference format
-def convert_to_dpo_format(example):
-    return {
-        "prompt": example["prompt"],
-        "chosen": example["chosen"],
-        "rejected": example["rejected"]
-    }
+prefs = []
 
+for item in sft_data[:1000]:  
+    prompt = item["prompt"]
+    chosen = item["response"]  
+    rejected = generate_alt_response(prompt) 
 
-# Write train dataset
+    prefs.append({"prompt": prompt, "chosen": chosen, "rejected": rejected})
+
+# Save for DPO
 with open("data/processed/prefs_train.jsonl", "w") as f:
-    for ex in train_data:
-        dpo_ex = convert_to_dpo_format(ex)
-        f.write(json.dumps(dpo_ex) + "\n")
-
-
-# Write validation dataset
-with open("data/processed/prefs_val.jsonl", "w") as f:
-    for ex in val_data:
-        dpo_ex = convert_to_dpo_format(ex)
-        f.write(json.dumps(dpo_ex) + "\n")
-
-print("Preference data created!")
+    for ex in prefs:
+        f.write(json.dumps(ex) + "\n")
