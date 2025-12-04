@@ -6,8 +6,8 @@ import os
 
 def main():
     base_model = "../models/sft_output"               # SFT model directory
-    prefs_train = "../data/processed/prefs_train.jsonl"
-    prefs_val   = "../data/processed/prefs_val.jsonl"
+    prefs_train = "prefs_train.jsonl"
+    prefs_val   = "prefs_val.jsonl"
     output_dir  = "../models/dpo_output"
 
     os.makedirs(output_dir, exist_ok=True)

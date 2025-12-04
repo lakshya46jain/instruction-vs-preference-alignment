@@ -1,7 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 import torch
 
-model_path = "tiny-gpt2-DPO/checkpoint-3"
+model_path = "DPO-path-checkpoint3"
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForCausalLM.from_pretrained(model_path, device_map="cpu")
