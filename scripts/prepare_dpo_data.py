@@ -28,7 +28,8 @@ model = AutoModelForCausalLM.from_pretrained(
 model.eval()
  
 print(f"Loading SFT data from: {sft_file}")
-sft_data = [json.loads(line) for line in open(sft_file)]
+with open(sft_file, "r", encoding="utf-8") as f:
+    sft_data = [json.loads(line) for line in f]
  
 def generate_rejected(prompt, max_new_tokens=80):
     gen_prompt = prompt + "\nProvide an alternative answer:\n"
