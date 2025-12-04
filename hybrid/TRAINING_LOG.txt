@@ -1,0 +1,39 @@
+HYBRID TRAINING LOG
+===================
+
+Author: Demi Omoremi
+
+METHOD
+------
+Two-stage training: SFT checkpoint → DPO alignment
+Uses LoRA adapters for efficient fine-tuning
+
+CONFIGURATION
+-------------
+Base Model: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+Method: Direct Preference Optimization (DPO)
+Starting Point: SFT checkpoint
+Dataset: 5,000 Anthropic HH-RLHF preference pairs
+Dataset File: preference_train.json
+
+Hardware: Google Colab T4 GPU
+Duration: 1 hour 44 minutes
+
+
+HYPERPARAMETERS
+---------------
+Epochs: 2.0
+Learning Rate: 5e-6
+Batch Size: 8 (effective)
+DPO Beta: 0.3
+Max Length: 384
+
+RESULTS
+-------
+Final Loss: 0.8301
+Training Steps: 1,250
+Samples/Second: 1.591
+
+Model Size: 4.3 MB (LoRA adapters)
+Dataset Size: 5,000 examples
+
