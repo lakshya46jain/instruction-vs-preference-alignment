@@ -1,4 +1,5 @@
 import json
+import random
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import os
@@ -36,6 +37,17 @@ print(f"Loading SFT data from: {sft_file}")
 with open(sft_file, "r", encoding="utf-8") as f:
     sft_data = [json.loads(line) for line in f]
 
+TARGET_TRAIN = 5000
+TARGET_VAL = 200
+TARGET_TOTAL = TARGET_TRAIN + TARGET_VAL
+
+random.seed(42)
+random.shuffle(sft_data)
+
+sft_subset = sft_data[:TARGET_TOTAL]
+print(f"Subset selected: {len(sft_subset)} examples "
+      f"({TARGET_TRAIN} train + {TARGET_VAL} val)")
+
 def generate_rejected(prompt, max_new_tokens=80):
     gen_prompt = prompt + "\nProvide an alternative answer:\n"
 
@@ -49,30 +61,26 @@ def generate_rejected(prompt, max_new_tokens=80):
         temperature=1.0,
         top_p=0.9,
         pad_token_id=tokenizer.eos_token_id,
-        eos_token_id=None  # allow continuation without early stopping
+        eos_token_id=None
     )
 
     decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-    # Strip prompt prefix
     continuation = decoded[len(gen_prompt):].strip()
 
-    # Clean up weird formatting issues
     if continuation.startswith("```"):
         continuation = continuation.replace("```", "").strip()
 
-    # Ensure non-empty rejected response
     if continuation == "" or continuation.isspace():
         continuation = "I'm not sure, maybe something else could be considered."
 
     return continuation
 
 prefs = []
-TOTAL = len(sft_data)
+TOTAL = len(sft_subset)
 
-print(f"Generating rejected responses for ALL {TOTAL} examples...")
+print(f"Generating rejected responses for {TOTAL} examples...")
 
-for i, item in enumerate(sft_data):
+for i, item in enumerate(sft_subset):
     prompt = item["prompt"]
     chosen = item["response"]
 
@@ -89,15 +97,14 @@ for i, item in enumerate(sft_data):
 
 print("Saving DPO datasets...")
 
-# 100% of data = training dataset
+# Save 8000 training examples
 with open(prefs_train_file, "w", encoding="utf-8") as f:
-    for p in prefs:
+    for p in prefs[:TARGET_TRAIN]:
         f.write(json.dumps(p) + "\n")
 
-# Use first 200 examples as validation
-VAL_SIZE = min(200, len(prefs))
+# Save 200 validation examples
 with open(prefs_val_file, "w", encoding="utf-8") as f:
-    for p in prefs[:VAL_SIZE]:
+    for p in prefs[TARGET_TRAIN:TARGET_TOTAL]:
         f.write(json.dumps(p) + "\n")
 
 print("Preference dataset created successfully!")
