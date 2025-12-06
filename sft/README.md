@@ -1,107 +1,244 @@
-# **README – Supervised Fine-Tuning (SFT)**
+Understood.
+Below is the **corrected, final SFT README** written for your actual repository, where **there is only one training script**:
 
-This folder contains all scripts and configuration files used for **Supervised Fine-Tuning (SFT)** of our base model.
+```
+sft/train_sft.py
+```
 
-The final trained SFT LoRA weights are located in:
+This script runs on **Mac (MPS)** only, and does **not** support CUDA or QLoRA. The README below removes all references to CUDA, QLoRA, or bitsandbytes.
+
+You can paste this directly into **sft/README.md**.
+
+---
+
+# Supervised Fine-Tuning (SFT) README
+
+This document provides a complete guide for preparing the environment, generating datasets, running the SFT training script, and evaluating the resulting LoRA-adapted model. It is fully aligned with the current project structure, which contains a **single SFT training script** designed for **Apple Silicon (MPS)** systems:
+
+```
+sft/train_sft.py
+```
+
+This script performs LoRA-based fine-tuning of the TinyLlama model using the processed instruction dataset.
+
+---
+
+# 1. Purpose of Supervised Fine-Tuning (SFT)
+
+Supervised Fine-Tuning adapts a pretrained language model to follow natural-language instructions using supervised learning on `(instruction, input, output)` examples.
+The model is trained with cross-entropy loss to reproduce target responses token-by-token.
+
+SFT provides:
+
+* Stronger instruction following
+* More structured outputs
+* More consistent responses
+* A better base model for downstream preference alignment (DPO / hybrid)
+
+LoRA is used to reduce memory requirements by training only low-rank adapter matrices rather than full model weights.
+
+---
+
+# 2. Environment Setup
+
+The SFT pipeline requires a clean, compatible Python environment. Follow these steps carefully.
+
+---
+
+## 2.1 Install pyenv (recommended)
+
+```bash
+brew install pyenv pyenv-virtualenv
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+---
+
+## 2.2 Create the Python environment
+
+Use **Python 3.11 only**.
+Newer versions (3.12/3.13) break PyTorch, Transformers, and Datasets.
+
+```bash
+pyenv install 3.11.8
+pyenv virtualenv 3.11.8 sft-env
+pyenv local sft-env
+```
+
+Verify:
+
+```bash
+python3 --version
+# Python 3.11.8
+```
+
+You should now see `(sft-env)` in your prompt.
+
+---
+
+## 2.3 Install PyTorch with MPS support (Apple Silicon)
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+```
+
+This wheel includes MPS acceleration automatically.
+
+---
+
+## 2.4 Install remaining SFT dependencies
+
+```bash
+pip install transformers datasets peft accelerate sentencepiece
+```
+
+Notes:
+
+* `bitsandbytes` is **not** installed because it is not supported on macOS.
+* This means **QLoRA is not available**, and full-precision LoRA training is used instead.
+
+---
+
+# 3. Preparing the SFT Dataset
+
+The SFT dataset is created from two raw sources:
+
+* `alpaca_data.json`
+* `cleaned_data.json`
+
+The preprocessing script:
+
+```
+scripts/prepare_sft_data.py
+```
+
+normalizes formatting, applies a unified instruction template, and creates the final train/val splits.
+
+---
+
+## 3.1 Run data preparation
+
+From the repository root:
+
+```bash
+python scripts/prepare_sft_data.py
+```
+
+This generates:
+
+```
+data/processed/sft_train.jsonl
+data/processed/sft_val.jsonl
+```
+
+These files must exist before starting SFT training.
+
+---
+
+# 4. Running SFT Training (Mac MPS Only)
+
+All SFT training is performed by a **single script**:
+
+```
+sft/train_sft.py
+```
+
+The script:
+
+* Loads TinyLlama in full precision
+* Runs on the Apple Silicon `mps` backend
+* Applies LoRA adapters
+* Trains on the processed dataset
+* Saves all checkpoints under:
 
 ```
 models/sft_output/
 ```
 
-Once the SFT run finishes, this folder will contain the LoRA adapter used for evaluation.
-
 ---
 
-To run evaluation, you will mainly need to:
+## 4.1 Run the SFT script
 
-### **1. Load the same base model used for SFT**
+From the project root:
+
+```bash
+python -m sft.train_sft
+```
+
+Training hyperparameters (batch size, epochs, LoRA rank, sequence length, learning rate, etc.) are located in:
 
 ```
-TinyLlama/TinyLlama-1.1B-Chat-v1.0
+sft/sft_config.py
 ```
 
-### **2. Load the trained LoRA adapter**
+Tokenization, padding, and label-masking logic is handled in:
 
-Example:
-
-```python
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from peft import PeftModel
-
-BASE = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-LORA = "models/sft_output/checkpoint-5000"   # final SFT checkpoint
-
-tokenizer = AutoTokenizer.from_pretrained(BASE)
-base_model = AutoModelForCausalLM.from_pretrained(BASE)
-model = PeftModel.from_pretrained(base_model, LORA)
+```
+sft/dataset.py
 ```
 
 ---
 
-## **3. Apply the chat template when generating**
+# 5. Training Outputs
 
-The base model is a **Chat model**, so prompts must be wrapped using:
+After training, the directory:
 
-```python
-chat_prompt = tokenizer.apply_chat_template(
-    [{"role": "user", "content": PROMPT}],
-    tokenize=False,
-    add_generation_prompt=True
-)
+```
+models/sft_output/
 ```
 
-Without the chat template, the model may just echo the prompt.
+contains:
+
+* `adapter_model.safetensors` – the trained LoRA adapter
+* `adapter_config.json` – LoRA configuration
+* Tokenizer files (json/model/config)
+* Multiple checkpoints (`checkpoint-XXXX`)
+* `trainer_state.json` – loss history and metadata
+* `training_args.bin` – the full training configuration snapshot
+
+A typical final checkpoint is:
+
+```
+models/sft_output/checkpoint-5000
+```
 
 ---
 
-## **4. Compare Base vs SFT Outputs**
+# 6. Evaluating the Trained SFT Model
 
-For each evaluation prompt:
-
-1. Generate output using the **base model alone**
-2. Generate output using **base + LoRA adapter**
-3. Compare for:
-
-   - Instruction following
-   - Coherence
-   - Correctness
-   - Formatting
-   - Overall quality
-
-This will be used to build the evaluation tables and plots.
-
----
-
-## **5. Example Script (sft_test.py)**
-
-A minimal working example is provided in:
+Evaluation is performed using:
 
 ```
 sft/sft_test.py
 ```
 
-It demonstrates:
-
-- Loading TinyLlama base
-- Loading the SFT LoRA adapter
-- Applying the chat template
-- Generating a response
-
-Use this as a reference when building the full evaluation pipeline.
+This script loads the base TinyLlama model + LoRA adapter, applies the chat template, and generates responses for verification.
 
 ---
 
-## Files in This Folder
+# 7. Troubleshooting
 
-- **train_sft_mac.py** – SFT training script (Mac MPS)
-- **sft_config.py** – hyperparameters and model config
-- **sft_test.py** – quick test to verify the trained SFT model works
+### Model outputs its own prompt
 
----
+You must use `tokenizer.apply_chat_template()`.
 
-## Notes
+### MPS device unavailable
 
-- The evaluation scripts will take the SFT model and compare it against:
-  - Base model
-  - DPO model
-  - Hybrid model
+Update macOS and Xcode.
+PyTorch must be installed using the CPU/MPS wheel shown above.
+
+### Python 3.12/3.13 errors
+
+Only Python 3.11 is supported.
+
+### Very slow training
+
+This is expected on MPS compared to CUDA.
+Reduce:
+
+* max sequence length
+* number of steps
+* LoRA rank
+* batch size
