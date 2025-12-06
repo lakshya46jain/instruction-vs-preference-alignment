@@ -1,360 +1,270 @@
 import os
 import math
-from typing import List, Dict
-
 import torch
 from torch.utils.data import DataLoader
-
 from datasets import load_dataset
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
+    BitsAndBytesConfig,
     get_linear_schedule_with_warmup,
 )
 
+# ==============================
+# ==== CONFIG (VRAM SAFE) ======
+# ==============================
 BASE_MODEL_DIR = "models/sft_output"
-PREFS_TRAIN_PATH = "data/processed/prefs_train.jsonl"
-PREFS_VAL_PATH = "data/processed/prefs_val.jsonl"
-OUTPUT_DIR = "models/dpo_output"
+PREFS_TRAIN = "data/processed/prefs_train.jsonl"
+PREFS_VAL   = "data/processed/prefs_val.jsonl"
+OUTPUT_DIR  = "models/dpo_output"
 
-MAX_LENGTH = 512
-BATCH_SIZE = 1           # per step
-GRAD_ACCUM_STEPS = 4     # effective batch = 4
+MAX_LENGTH = 384          # ↓↓↓ reduce context to save VRAM
+BATCH_SIZE = 1
+GRAD_ACCUM = 4
 NUM_EPOCHS = 1
-LEARNING_RATE = 1e-5
+LR = 1e-5
 WEIGHT_DECAY = 0.01
+BETA = 0.1
 LOG_EVERY = 20
-BETA = 0.1               # DPO beta
+USE_4BIT = True      # <-- enable 4-bit quantization
+# ==============================
 
 
-def build_text(prompt: str, response: str) -> str:
-    # TinyLlama-Chat official formatting (newline-separated messages)
-    return (
-        "<|system|>\nYou are a helpful assistant.\n"
-        "<|user|>\n" + prompt + "\n"
-        "<|assistant|>\n" + response
-    )
+# ------------------------------
+# Helper to free memory
+# ------------------------------
+def clean_mem():
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
+
+# ------------------------------
+# Collator
+# ------------------------------
 class DPOCollator:
-    def __init__(self, tokenizer, max_length: int = 512):
+    def __init__(self, tokenizer, max_length):
         self.tokenizer = tokenizer
         self.max_length = max_length
 
     def __call__(self, batch):
         prompts = [ex["prompt"] for ex in batch]
-        chosen_responses = [ex["chosen"] for ex in batch]
-        rejected_responses = [ex["rejected"] for ex in batch]
+        chosen  = [ex["chosen"] for ex in batch]
+        rejected = [ex["rejected"] for ex in batch]
 
-        # Build full texts
+        sys = "<|system|>\nYou are a helpful assistant.\n"
+
         chosen_texts = [
-            "<|system|>\nYou are a helpful assistant.\n"
-            "<|user|>\n" + p + "\n"
-            "<|assistant|>\n" + c
-            for p, c in zip(prompts, chosen_responses)
+            f"{sys}<|user|>\n{p}\n<|assistant|>\n{c}"
+            for p, c in zip(prompts, chosen)
         ]
-
         rejected_texts = [
-            "<|system|>\nYou are a helpful assistant.\n"
-            "<|user|>\n" + p + "\n"
-            "<|assistant|>\n" + r
-            for p, r in zip(prompts, rejected_responses)
+            f"{sys}<|user|>\n{p}\n<|assistant|>\n{r}"
+            for p, r in zip(prompts, rejected)
         ]
-
-        # Also tokenize prompt-only to get correct prompt lengths AFTER padding
-        prompt_only_texts = [
-            "<|system|>\nYou are a helpful assistant.\n"
-            "<|user|>\n" + p + "\n"
-            "<|assistant|>\n"
+        prompt_only = [
+            f"{sys}<|user|>\n{p}\n<|assistant|>\n"
             for p in prompts
         ]
 
-        prompt_enc = self.tokenizer(
-            prompt_only_texts,
-            padding=True,
-            truncation=True,
-            max_length=self.max_length,
-            return_tensors="pt",
-        )
+        prompt_enc = self.tokenizer(prompt_only, truncation=True, padding=True,
+                                    max_length=self.max_length, return_tensors="pt")
+        chosen_enc = self.tokenizer(chosen_texts, truncation=True, padding=True,
+                                    max_length=self.max_length, return_tensors="pt")
+        rejected_enc = self.tokenizer(rejected_texts, truncation=True, padding=True,
+                                      max_length=self.max_length, return_tensors="pt")
 
-        chosen_enc = self.tokenizer(
-            chosen_texts,
-            padding=True,
-            truncation=True,
-            max_length=self.max_length,
-            return_tensors="pt",
-        )
-
-        rejected_enc = self.tokenizer(
-            rejected_texts,
-            padding=True,
-            truncation=True,
-            max_length=self.max_length,
-            return_tensors="pt",
-        )
-
-        # TRUE prompt lengths (count non-pad tokens)
         prompt_lens = prompt_enc["attention_mask"].sum(dim=1)
 
         return {
-            "chosen_input_ids": chosen_enc["input_ids"],
-            "chosen_attention_mask": chosen_enc["attention_mask"],
-            "rejected_input_ids": rejected_enc["input_ids"],
-            "rejected_attention_mask": rejected_enc["attention_mask"],
+            "chosen_ids": chosen_enc["input_ids"],
+            "chosen_mask": chosen_enc["attention_mask"],
+            "reject_ids": rejected_enc["input_ids"],
+            "reject_mask": rejected_enc["attention_mask"],
             "prompt_lens": prompt_lens,
         }
 
-def compute_logprobs(model, input_ids, attention_mask, prompt_lens):
-    """
-    Computes logprobs ONLY for response tokens,
-    properly correcting for left padding.
-    """
 
-    outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-    logits = outputs.logits  # [B, T, V]
+# ------------------------------
+# Logprob computation
+# ------------------------------
+def compute_logprobs(model, ids, mask, prompt_lens, device=None):
+    """
+    Computes log-probabilities of the response tokens for given model.
+    If device is provided, inputs are moved to that device before the forward pass.
+    """
+    if device is not None:
+        ids = ids.to(device)
+        mask = mask.to(device)
+        prompt_lens = prompt_lens.to(device)
 
-    # Shift for next-token prediction
-    logits = logits[:, :-1]
-    labels = input_ids[:, 1:]
-    mask_shifted = attention_mask[:, 1:]
+    # Forward pass (no grad when used for reference)
+    out = model(input_ids=ids, attention_mask=mask)
+    logits = out.logits[:, :-1]
+    labels = ids[:, 1:]
+    attn_shift = mask[:, 1:]
+
     log_probs = torch.log_softmax(logits, dim=-1)
-    token_log_probs = log_probs.gather(-1, labels.unsqueeze(-1)).squeeze(-1)
+    token_lp = log_probs.gather(-1, labels.unsqueeze(-1)).squeeze(-1)
 
-    B, T = token_log_probs.shape
-    response_mask = torch.zeros_like(token_log_probs)
+    B, T = token_lp.shape
+    response_mask = torch.zeros_like(token_lp)
 
     for i in range(B):
-        pl = prompt_lens[i].item()
-
-        # Because the shifted labels start at position 1,
-        # the response begins exactly at index (pl - 1)
-        start = pl - 1
-
+        start = prompt_lens[i].item() - 1
         if start < T:
             response_mask[i, start:] = 1
 
-    # Only keep logprobs of response tokens
-    token_log_probs = token_log_probs * response_mask * mask_shifted
+    token_lp = token_lp * response_mask * attn_shift
+    return token_lp.sum(dim=-1)
 
-    return token_log_probs.sum(dim=-1)
 
-def dpo_loss(
-    policy_model,
-    ref_model,
-    batch: Dict[str, torch.Tensor],
-    beta: float,
-    device: torch.device,
-):
-    # Move tensors
-    chosen_ids = batch["chosen_input_ids"].to(device)
-    chosen_mask = batch["chosen_attention_mask"].to(device)
-    rejected_ids = batch["rejected_input_ids"].to(device)
-    rejected_mask = batch["rejected_attention_mask"].to(device)
+# ------------------------------
+# DPO LOSS
+# ------------------------------
+def dpo_loss(policy, ref, batch, beta, device):
+    # batch tensors are placed on training device by default (device)
+    c_ids = batch["chosen_ids"]
+    c_mask = batch["chosen_mask"]
+    r_ids = batch["reject_ids"]
+    r_mask = batch["reject_mask"]
+    p_lens = batch["prompt_lens"]
 
-    prompt_lens = batch["prompt_lens"].to(device)
+    # Device of policy (trainable) and reference (could be CPU)
+    policy_device = device
+    ref_device = next(ref.parameters()).device if any(p is not None for p in ref.parameters()) else torch.device("cpu")
 
-    pi_chosen = compute_logprobs(policy_model, chosen_ids, chosen_mask, prompt_lens)
-    pi_rejected = compute_logprobs(policy_model, rejected_ids, rejected_mask, prompt_lens)
+    # Ensure policy use_cache disabled if gradient checkpointing enabled
+    try:
+        if getattr(policy.config, "use_cache", None) and getattr(policy, "gradient_checkpointing", False):
+            policy.config.use_cache = False
+    except Exception:
+        pass
 
+    # Policy forward pass on GPU (or device)
+    pi_c = compute_logprobs(policy, c_ids, c_mask, p_lens, device=policy_device)
+    pi_r = compute_logprobs(policy, r_ids, r_mask, p_lens, device=policy_device)
+
+    # Reference forward pass on its device (no grad)
     with torch.no_grad():
-        ref_chosen = compute_logprobs(ref_model, chosen_ids, chosen_mask, prompt_lens)
-        ref_rejected = compute_logprobs(ref_model, rejected_ids, rejected_mask, prompt_lens)
+        ref_c = compute_logprobs(ref, c_ids, c_mask, p_lens, device=ref_device)
+        ref_r = compute_logprobs(ref, r_ids, r_mask, p_lens, device=ref_device)
 
-    # Advantages
-    pi_diff = pi_chosen - pi_rejected        # [B]
-    ref_diff = ref_chosen - ref_rejected     # [B]
+    # Move ref values to policy device for arithmetic (small tensors)
+    if ref_c.device != pi_c.device:
+        ref_c = ref_c.to(pi_c.device)
+        ref_r = ref_r.to(pi_r.device)
 
-    # DPO loss: -log σ( β[(π(y⁺)-π(y⁻)) - (π_ref(y⁺)-π_ref(y⁻))] )
-    logits = beta * (pi_diff - ref_diff)
-    loss = -torch.nn.functional.logsigmoid(logits).mean()
-
-    # Sanity check (debug-style, but cheap)
-    if not loss.requires_grad:
-        raise RuntimeError("DPO loss ended up without grad; check policy_model parameters.")
-
-    return loss
+    logits = beta * ((pi_c - pi_r) - (ref_c - ref_r))
+    return -torch.nn.functional.logsigmoid(logits).mean()
 
 
+# ------------------------------
+# MAIN
+# ------------------------------
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+    clean_mem()
 
-    # ----- Device -----
-    if torch.cuda.is_available():
-        device = torch.device("cuda")
-    elif torch.backends.mps.is_available():
-        device = torch.device("mps")
-    else:
-        device = torch.device("cpu")
+    # DEVICE
+    device = (
+        "cuda" if torch.cuda.is_available()
+        else "mps" if torch.backends.mps.is_available()
+        else "cpu"
+    )
+    device = torch.device(device)
     print(f"Using device: {device}")
 
-    # ----- Data -----
-    print("Loading preference datasets...")
-    train_dataset = load_dataset("json", data_files=PREFS_TRAIN_PATH, split="train")
-    eval_dataset = load_dataset("json", data_files=PREFS_VAL_PATH, split="train")
-
-    print("Loading tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+    # DATA
+    train_set = load_dataset("json", data_files=PREFS_TRAIN, split="train")
+    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_DIR)
+    tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "left"
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
 
-    collator = DPOCollator(tokenizer, max_length=MAX_LENGTH)
+    collator = DPOCollator(tokenizer, MAX_LENGTH)
+    loader = DataLoader(train_set, batch_size=BATCH_SIZE,
+                        shuffle=True, collate_fn=collator)
 
-    train_loader = DataLoader(
-        train_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=True,
-        collate_fn=collator,
+    # QUANTIZATION CONFIG
+    quant_cfg = None
+    dtype = torch.float32
+    if USE_4BIT:
+        quant_cfg = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_quant_type="nf4"
+        )
+        dtype = torch.float16
+        print(">>> Using 4-bit quantization for policy model")
+
+    # POLICY MODEL
+    policy = AutoModelForCausalLM.from_pretrained(
+        BASE_MODEL_DIR,
+        torch_dtype=dtype,
+        quantization_config=quant_cfg,
+        device_map="auto" if USE_4BIT else None
     )
 
-    # ----- Models -----
-    print("Loading policy model from SFT checkpoint...")
-    # float32 everywhere (safer on MPS/CPU)
-    dtype = torch.float32
-    policy_model = AutoModelForCausalLM.from_pretrained(
-        BASE_MODEL_DIR,
-        torch_dtype=dtype,
-    ).to(device)
-    policy_model.gradient_checkpointing_enable()
+    # If gradient checkpointing is enabled, disable use_cache to avoid warnings
+    try:
+        policy.gradient_checkpointing_enable()
+        if hasattr(policy.config, "use_cache"):
+            policy.config.use_cache = False
+    except Exception:
+        pass
 
-    print("Creating frozen reference model...")
-    ref_model = AutoModelForCausalLM.from_pretrained(
+    policy.train()
+
+    # REFERENCE MODEL — keep on CPU for VRAM savings
+    print(">>> Loading reference model on CPU to save VRAM")
+    ref = AutoModelForCausalLM.from_pretrained(
         BASE_MODEL_DIR,
-        torch_dtype=dtype,
-    ).to(device)
-    ref_model.eval()
-    for p in ref_model.parameters():
+        torch_dtype=torch.float32,
+        device_map=None
+    )
+    # explicitly ensure ref is on CPU
+    ref.to(torch.device("cpu"))
+    ref.eval()
+    for p in ref.parameters():
         p.requires_grad = False
 
-    # Make absolutely sure policy model is trainable
-    policy_model.train()
-    for p in policy_model.parameters():
-        p.requires_grad = True
+    # OPTIMIZER + SCHEDULER
+    opt = torch.optim.AdamW(policy.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 
-    # ----- Optimizer / Scheduler -----
-    no_decay = ["bias", "LayerNorm.weight"]
-    optimizer_grouped_parameters = [
-        {
-            "params": [
-                p
-                for n, p in policy_model.named_parameters()
-                if not any(nd in n for nd in no_decay)
-            ],
-            "weight_decay": WEIGHT_DECAY,
-        },
-        {
-            "params": [
-                p
-                for n, p in policy_model.named_parameters()
-                if any(nd in n for nd in no_decay)
-            ],
-            "weight_decay": 0.0,
-        },
-    ]
+    steps_per_epoch = math.ceil(len(loader) / GRAD_ACCUM)
+    total_steps = steps_per_epoch * NUM_EPOCHS
+    warmup = max(10, total_steps // 10)
 
-    optimizer = torch.optim.AdamW(
-        optimizer_grouped_parameters,
-        lr=LEARNING_RATE,
-    )
+    sched = get_linear_schedule_with_warmup(opt, warmup, total_steps)
 
-    num_update_steps_per_epoch = math.ceil(len(train_loader) / GRAD_ACCUM_STEPS)
-    max_train_steps = NUM_EPOCHS * num_update_steps_per_epoch
-    num_warmup_steps = max(10, max_train_steps // 10)
-
-    scheduler = get_linear_schedule_with_warmup(
-        optimizer,
-        num_warmup_steps=num_warmup_steps,
-        num_training_steps=max_train_steps,
-    )
-
-    # ----- Training -----
+    # TRAIN LOOP
     from tqdm import tqdm
-    import time
-    import json
+    step = 0
+    running = 0.0
 
-    print("Starting custom DPO training loop...")
+    print(">>> Starting DPO training...")
 
-    global_step = 0
-    optimizer_step = 0
-    running_loss = 0.0
-    smoothed_loss = None
-    loss_log = []  # store losses for export
+    for epoch in range(NUM_EPOCHS):
+        for batch in tqdm(loader):
+            loss = dpo_loss(policy, ref, batch, BETA, device)
 
-    start_time = time.time()
+            loss.backward()
+            running += loss.item()
+            step += 1
 
-    # Progress bar for batches
-    progress_bar = tqdm(train_loader, desc="Training", dynamic_ncols=True)
+            if step % GRAD_ACCUM == 0:
+                torch.nn.utils.clip_grad_norm_(policy.parameters(), 1.0)
+                opt.step()
+                sched.step()
+                opt.zero_grad()
+                clean_mem()
 
-    for batch in progress_bar:
-        # Use collated batch from DataLoader → compute proper DPO loss
-        loss = dpo_loss(
-            policy_model,
-            ref_model,
-            batch,
-            beta=BETA,
-            device=device,
-        )
+        print(f"Epoch {epoch+1} done | avg loss = {running/step:.4f}")
 
-        # Backprop
-        loss.backward()
-        running_loss += loss.item()
-        global_step += 1
-
-        # Update smoothed loss (EMA)
-        if smoothed_loss is None:
-            smoothed_loss = loss.item()
-        else:
-            smoothed_loss = 0.9 * smoothed_loss + 0.1 * loss.item()
-
-        # Update tqdm progress bar info
-        progress_bar.set_postfix({
-            "loss": f"{smoothed_loss:.4f}",
-            "opt_step": optimizer_step,
-        })
-
-        # Optimizer step every GRAD_ACCUM_STEPS
-        if global_step % GRAD_ACCUM_STEPS == 0:
-            torch.nn.utils.clip_grad_norm_(policy_model.parameters(), 1.0)
-            optimizer.step()
-            scheduler.step()
-            optimizer.zero_grad()
-            optimizer_step += 1
-
-            # Log the averaged loss
-            avg_loss = running_loss / GRAD_ACCUM_STEPS
-            running_loss = 0.0
-
-            loss_log.append({
-                "optimizer_step": optimizer_step,
-                "loss": avg_loss,
-                "time": time.time() - start_time
-            })
-
-            # Explicit print (for reassurance)
-            print(
-                f"\nOptimizer Step {optimizer_step} "
-                f" | Avg Loss: {avg_loss:.4f} "
-                f" | Smoothed Loss: {smoothed_loss:.4f}"
-            )
-
-    # END OF TRAINING
-    total_time = time.time() - start_time
-
-    print("\n===== TRAINING COMPLETE =====")
-    print(f"Total optimizer steps: {optimizer_step}")
-    print(f"Total time: {total_time/60:.2f} minutes")
-    print(f"Final smoothed loss: {smoothed_loss:.4f}")
-
-    # Save loss log
-    with open("models/dpo_output/loss_log.json", "w") as f:
-        json.dump(loss_log, f, indent=2)
-
-    print("Saved loss log to models/dpo_output/loss_log.json")
-
-    # ----- Save -----
-    print(f"Saving DPO model to {OUTPUT_DIR} ...")
-    policy_model.save_pretrained(OUTPUT_DIR)
+    # SAVE MODEL
+    print("Saving model...")
+    policy.save_pretrained(OUTPUT_DIR)
     tokenizer.save_pretrained(OUTPUT_DIR)
-    print("DPO training complete!")
+    print("DPO complete!")
 
 
 if __name__ == "__main__":
