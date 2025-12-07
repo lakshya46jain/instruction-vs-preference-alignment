@@ -15,7 +15,7 @@ from peft import PeftModel
 BASE = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
 # Location of LoRA fine-tuned checkpoint
-LORA = "models/sft_output/checkpoint-5000"
+LORA = "models/sft_output"
 
 
 def main():
