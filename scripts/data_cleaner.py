@@ -57,5 +57,5 @@ final_data = clear_whiteSpace(data)
 json_data = [{"instruction": j, "input": i, "output": k} for j, i, k in final_data]
 
 # Write the cleaned JSON file to disk
-with open("cleaned_data.json", "w", encoding="utf-8") as f:
+with open("./data/raw/code_alpaca_clean.json", "w", encoding="utf-8") as f:
     json.dump(json_data, f, ensure_ascii=False, indent=2)

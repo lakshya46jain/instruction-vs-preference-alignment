@@ -47,7 +47,7 @@ def main():
     alpaca = load_json(RAW_DIR / "alpaca_data.json")
 
     # Load cleaned Code Alpaca dataset
-    cleaned = load_json(RAW_DIR / "cleaned_data.json")
+    cleaned = load_json(RAW_DIR / "code_alpaca_clean.json")
 
     # Combine both datasets
     all_data = alpaca + cleaned

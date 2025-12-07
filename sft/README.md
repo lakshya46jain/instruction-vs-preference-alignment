@@ -1,16 +1,3 @@
-Understood.
-Below is the **corrected, final SFT README** written for your actual repository, where **there is only one training script**:
-
-```
-sft/train_sft.py
-```
-
-This script runs on **Mac (MPS)** only, and does **not** support CUDA or QLoRA. The README below removes all references to CUDA, QLoRA, or bitsandbytes.
-
-You can paste this directly into **sft/README.md**.
-
----
-
 # Supervised Fine-Tuning (SFT) README
 
 This document provides a complete guide for preparing the environment, generating datasets, running the SFT training script, and evaluating the resulting LoRA-adapted model. It is fully aligned with the current project structure, which contains a **single SFT training script** designed for **Apple Silicon (MPS)** systems:
@@ -30,10 +17,10 @@ The model is trained with cross-entropy loss to reproduce target responses token
 
 SFT provides:
 
-* Stronger instruction following
-* More structured outputs
-* More consistent responses
-* A better base model for downstream preference alignment (DPO / hybrid)
+- Stronger instruction following
+- More structured outputs
+- More consistent responses
+- A better base model for downstream preference alignment (DPO / hybrid)
 
 LoRA is used to reduce memory requirements by training only low-rank adapter matrices rather than full model weights.
 
@@ -96,8 +83,8 @@ pip install transformers datasets peft accelerate sentencepiece
 
 Notes:
 
-* `bitsandbytes` is **not** installed because it is not supported on macOS.
-* This means **QLoRA is not available**, and full-precision LoRA training is used instead.
+- `bitsandbytes` is **not** installed because it is not supported on macOS.
+- This means **QLoRA is not available**, and full-precision LoRA training is used instead.
 
 ---
 
@@ -105,8 +92,8 @@ Notes:
 
 The SFT dataset is created from two raw sources:
 
-* `alpaca_data.json`
-* `cleaned_data.json`
+- `alpaca_data.json`
+- `code_alpaca_clean.json`
 
 The preprocessing script:
 
@@ -147,11 +134,11 @@ sft/train_sft.py
 
 The script:
 
-* Loads TinyLlama in full precision
-* Runs on the Apple Silicon `mps` backend
-* Applies LoRA adapters
-* Trains on the processed dataset
-* Saves all checkpoints under:
+- Loads TinyLlama in full precision
+- Runs on the Apple Silicon `mps` backend
+- Applies LoRA adapters
+- Trains on the processed dataset
+- Saves all checkpoints under:
 
 ```
 models/sft_output/
@@ -191,12 +178,12 @@ models/sft_output/
 
 contains:
 
-* `adapter_model.safetensors` – the trained LoRA adapter
-* `adapter_config.json` – LoRA configuration
-* Tokenizer files (json/model/config)
-* Multiple checkpoints (`checkpoint-XXXX`)
-* `trainer_state.json` – loss history and metadata
-* `training_args.bin` – the full training configuration snapshot
+- `adapter_model.safetensors` – the trained LoRA adapter
+- `adapter_config.json` – LoRA configuration
+- Tokenizer files (json/model/config)
+- Multiple checkpoints (`checkpoint-XXXX`)
+- `trainer_state.json` – loss history and metadata
+- `training_args.bin` – the full training configuration snapshot
 
 A typical final checkpoint is:
 
@@ -238,7 +225,7 @@ Only Python 3.11 is supported.
 This is expected on MPS compared to CUDA.
 Reduce:
 
-* max sequence length
-* number of steps
-* LoRA rank
-* batch size
+- max sequence length
+- number of steps
+- LoRA rank
+- batch size

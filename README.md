@@ -17,16 +17,16 @@ Our workflow follows the real-world alignment stack:
 
 We work with three datasets:
 
-| Filename               | Purpose                                                       | Use in Project |
-| ---------------------- | ------------------------------------------------------------- | -------------- |
-| `alpaca_data.json`     | Pre-cleaned instruction-tuning dataset (general instructions) | ✔ Used         |
-| `code_alpaca_20k.json` | Code instruction dataset (raw)                                | ✘ Not used     |
-| `cleaned_data.json`    | Cleaned version of code dataset                               | ✔ Used         |
+| Filename                  | Purpose                                                       | Use in Project |
+| ------------------------- | ------------------------------------------------------------- | -------------- |
+| `alpaca_data.json`        | Pre-cleaned instruction-tuning dataset (general instructions) | ✔ Used         |
+| `code_alpaca_20k.json`    | Code instruction dataset (raw)                                | ✘ Not used     |
+| `code_alpaca_clean.json`  | Cleaned version of code dataset                               | ✔ Used         |
 
 For this project, **only two datasets are used for fine-tuning**:
 
 - `alpaca_data.json`
-- `cleaned_data.json`
+- `code_alpaca_clean.json`
 
 These are combined, formatted into a unified prompt style, and split into train/validation sets.
 
