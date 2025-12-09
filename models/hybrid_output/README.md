@@ -174,12 +174,7 @@ python hybrid/train_hybrid.py
 - Use CPU: `device_map="cpu"`
 - Or use 8-bit loading: `load_in_8bit=True`
 
-## Contact
 
-- Author: Demi Omoremi
-- Email: [your email if you want]
-- GitHub: @demi8824
-- HuggingFace: @demi8824
 
 ## Acknowledgments
 
