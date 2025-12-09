@@ -1,188 +1,133 @@
-# Hybrid Fine-Tuning (SFT + DPO)
-
-**Author:** Demi Omoremi  
-**Date:** December 2025  
-**Status:** ✅ Complete
+# Hybrid Model (SFT + DPO)
 
 ## Overview
 
-This is the hybrid approach combining Supervised Fine-Tuning (SFT) with Direct Preference Optimization (DPO) through sequential training.
+This model represents the **Hybrid** training approach: combining Supervised Fine-Tuning (SFT) with Direct Preference Optimization (DPO). It starts from the SFT checkpoint and applies preference optimization on top.
 
-## Training Method
+## Training Methodology
+
+### Architecture (Following Jain's Design)
+
+**Reference Model (Frozen):**
+- Base: TinyLlama-1.1B-Chat-v1.0
+- + SFT LoRA adapters (merged)
+- Status: Frozen (non-trainable)
+- Purpose: Serves as the reference distribution for DPO
+
+**Policy Model (Trainable):**
+- Base: TinyLlama-1.1B-Chat-v1.0
+- + SFT LoRA adapters (merged)
+- + NEW LoRA layer for DPO training
+- Status: Trainable
+- Purpose: Learns preference alignment while staying close to SFT reference
+
+### Key Design Decisions
+
+1. **Real Frozen Reference Model**: Unlike setting `ref_model=None`, we use a proper frozen copy of the merged SFT model. This is critical for valid DPO training.
+
+2. **Starting from SFT**: Both policy and reference start from the SFT checkpoint, not base TinyLlama. This allows us to answer: "Does preference alignment provide gains beyond SFT?"
+
+3. **Gradient Checkpointing Disabled**: Set to `False` to prevent zero gradients during DPO training (a known compatibility issue).
+
+4. **Different Hyperparameters than DPO Baseline**: Uses extended training schedule to differentiate Hybrid from pure DPO approach.
+
+### Training Pipeline
+
 ```
-Base Model (TinyLlama-1.1B)
-    ↓
-[SFT Training] (teammate's work)
-    ↓
-SFT Checkpoint (models/sft_output)
-    ↓
-[DPO Training] (my work)
-    ↓
-Hybrid Model ✓
+Base TinyLlama → SFT → DPO (with frozen SFT reference) = Hybrid Model
 ```
 
-## Model Access
+## Training Results
 
-### HuggingFace (Primary)
-- **Repository:** https://huggingface.co/demi8824/tinyllama-sft-dpo-hybrid
-- **Format:** Full merged model (not adapters)
-- **Loading:**
+- **Duration**: 20 minutes (A100 GPU)
+- **Initial Loss**: 0.6937 (log(2), expected when policy = reference)
+- **Final Loss**: 0.0695 (90% reduction)
+- **Final Accuracy**: 98-100%
+- **Epochs**: 2
+- **Learning Rate**: 5e-6 (cosine schedule)
+- **Beta**: 0.3
+
+## Model Location
+
+### Files in `models/hybrid_output/`
+- `adapter_model.safetensors` (49M) - DPO LoRA weights
+- `adapter_config.json` - LoRA configuration
+- `tokenizer*` files - Tokenization
+- `README.md` - This file
+
+## Loading Instructions
+
+The Hybrid model requires loading **both** SFT and DPO LoRA adapters in sequence:
+
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
-model = AutoModelForCausalLM.from_pretrained("demi8824/tinyllama-sft-dpo-hybrid")
-tokenizer = AutoTokenizer.from_pretrained("demi8824/tinyllama-sft-dpo-hybrid")
-```
-
-### Google Drive (Backup)
-- **Location:** MyDrive/hybrid_model_final/
-- **Contents:** Model files, logs, evaluation results
-
-## Training Configuration
-
-- **Base Model:** TinyLlama/TinyLlama-1.1B-Chat-v1.0
-- **Starting Point:** models/sft_output (SFT checkpoint)
-- **Training Data:** data/processed/prefs_train.jsonl (5,000 examples)
-- **Validation Data:** data/processed/prefs_val.jsonl (200 examples)
-- **Hardware:** Google Colab Pro A100 GPU
-- **Training Time:** ~20 minutes
-- **Epochs:** 2
-- **Batch Size:** 2 (per device), 4 gradient accumulation = 8 effective
-- **Learning Rate:** 5e-6
-- **DPO Beta:** 0.3
-
-## Key Differences from Other Models
-
-| Model | Format | Loading Method |
-|-------|--------|----------------|
-| SFT-only | LoRA adapters | Needs base + adapters |
-| DPO-only | LoRA adapters | Needs base + adapters |
-| **Hybrid (this)** | **Full merged model** | **Direct load** ✓ |
-
-**Advantage:** Easier to evaluate - no adapter management needed!
-
-## For Evaluation (Erik)
-
-### Quick Load
-```python
+from peft import PeftModel
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# Load model
-model = AutoModelForCausalLM.from_pretrained(
-    "demi8824/tinyllama-sft-dpo-hybrid",
+# Step 1: Load base model
+base_model = AutoModelForCausalLM.from_pretrained(
+    "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
     torch_dtype=torch.bfloat16,
     device_map="auto"
 )
 
-tokenizer = AutoTokenizer.from_pretrained("demi8824/tinyllama-sft-dpo-hybrid")
-if tokenizer.pad_token is None:
-    tokenizer.pad_token = tokenizer.eos_token
+# Step 2: Load SFT LoRA adapters
+model = PeftModel.from_pretrained(base_model, "models/sft_output")
 
-model.eval()
+# Step 3: Load Hybrid (DPO) LoRA adapters on top
+model = PeftModel.from_pretrained(model, "models/hybrid_output")
 
-# Generate
-def generate(prompt, max_length=200):
-    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-    with torch.no_grad():
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=max_length,
-            temperature=0.7,
-            top_p=0.9
-        )
-    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+# Step 4 (Optional): Merge for faster inference
+model = model.merge_and_unload()
 
-# Test
-response = generate("Write a Python function to add two numbers.")
-print(response)
+# Step 5: Load tokenizer
+tokenizer = AutoTokenizer.from_pretrained("models/hybrid_output")
+
+print("✅ Hybrid model loaded successfully!")
 ```
 
-### Expected Capabilities
+## Comparison with Other Models
 
-1. **Instruction Following** (from SFT):
-   - Should understand and follow task instructions
-   - Should produce structured outputs
-   - Should handle code generation well
+| Model | Pipeline | Reference Model |
+|-------|----------|-----------------|
+| **SFT** | Base → SFT | N/A |
+| **DPO** | Base → SFT → DPO | Frozen SFT |
+| **Hybrid** | Base → SFT → DPO (extended) | Frozen SFT |
 
-2. **Preference Alignment** (from DPO):
-   - Should prefer helpful over terse responses
-   - Should avoid low-quality outputs
-   - Should demonstrate better response quality
+The key difference between DPO and Hybrid is in the **training schedule and hyperparameters**, not the starting point. Both begin from SFT.
 
-## Comparison Framework
+## Technical Details
 
-The hybrid model should be evaluated against:
+**Trainable Parameters**: 12,615,680 (LoRA only)
 
-1. **SFT-only baseline:**
-   - Same instruction-following capability
-   - Better preference alignment (hybrid advantage)
+**DPO Configuration**:
+- Epochs: 2
+- Batch Size: 2 (per device)
+- Gradient Accumulation: 4
+- Learning Rate: 5e-6
+- LR Scheduler: Cosine
+- Max Length: 512
+- Beta: 0.3
+- Gradient Checkpointing: False (critical fix)
 
-2. **DPO-only:**
-   - Better instruction-following (hybrid advantage)
-   - Similar preference alignment
+**LoRA Configuration**:
+- r: 16
+- alpha: 32
+- Target Modules: q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj
+- Dropout: 0.05
 
-3. **Expected result:**
-   - Best of both worlds
-   - Combines strengths of both approaches
+## Validation
 
-## Files in This Directory
+To verify the model loads correctly:
 
-- `README.md` - This file
-- `train_hybrid.py` - Training script used
-- `eval_hybrid.py` - Evaluation script
-- `TRAINING_LOG.txt` - Training metrics and duration
-- `EVAL_RESULTS.txt` - Sample evaluation outputs
-
-## Training Results
-
-- **Final Loss:** [See TRAINING_LOG.txt]
-- **Training Duration:** ~20 minutes on T4 GPU
-- **Model Size:** ~1.1B parameters (full merged model)
-- **Format:** PyTorch, compatible with transformers library
-
-## Reproducibility
-
-To reproduce this training:
-```bash
-# Clone repo
-git clone https://github.com/lakshya46jain/instruction-vs-preference-alignment.git
-cd instruction-vs-preference-alignment
-
-# Install dependencies
-pip install transformers datasets peft accelerate trl
-
-# Run training (requires GPU)
-python hybrid/train_hybrid.py
+```python
+# Quick generation test
+prompt = "Explain the difference between SFT and RLHF."
+inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+outputs = model.generate(**inputs, max_length=200, temperature=0.7)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 ```
 
-## Notes
+## Credits
 
-- Model has LoRA improvements permanently integrated (merged)
-- Does not require separate base model loading
-- Compatible with standard transformers pipeline
-- Used official team preference dataset for fair comparison
-
-## Troubleshooting
-
-**If model doesn't load:**
-- Check internet connection (downloads from HuggingFace)
-- Ensure transformers library is up to date: `pip install --upgrade transformers`
-- Try specifying dtype: `torch_dtype=torch.float16`
-
-**For CUDA out of memory:**
-- Use CPU: `device_map="cpu"`
-- Or use 8-bit loading: `load_in_8bit=True`
-
-
-
-## Acknowledgments
-
-Part of CS 4804 project at Virginia Tech comparing instruction tuning vs preference alignment methods.
-
-Team members:
-- Lakshya Jain (project lead)
-- Aditya Choudhary (data)
-- Shriram Anand (DPO-only)
-- Erik Garcia (evaluation)
-- Demi Omoremi (hybrid approach)
+Trained as part of the "Instruction vs Preference Alignment" research project comparing SFT-only, DPO-only, and Hybrid (SFT+DPO) approaches.
