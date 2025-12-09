@@ -14,5 +14,5 @@ __pycache__/
 # OS-generated
 .DS_Store
 
-# pyenv (optional but recommended)
+# pyenv
 .python-version
