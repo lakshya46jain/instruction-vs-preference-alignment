@@ -1,0 +1,3773 @@
+Heuristic IF-style evaluation on dataset: data/processed/sft_val.jsonl
+
+====================================================================================================
+EXAMPLE 1
+PROMPT:
+### Instruction:
+Read this text, then write a summary of its main points
+
+### Input:
+Robotic process automation (RPA) is a form of technology that uses software bots to automate repetitive and mundane tasks. RPA is advantageous because it helps to reduce errors, increases accuracy and boosts efficiency.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Robotic process automation (RPA) is a form of technology that uses software bots to automate repetitive, monotonous tasks, resulting in greater accuracy, efficiency, and fewer errors.
+
+BASE OUTPUT:
+The text "Robotic Process Automation (RPA): A Revolutionary Technology for Businesses" discusses the benefits of RPA, which is a form of technology that uses software bots to automate repetitive and mundane tasks. RPA is advantageous because it helps to reduce errors, increase accuracy, and boost efficiency. The text provides examples of how RPA has been used in various industries, including finance, healthcare, and manufacturing. It also highlights
+
+[Base heuristic score: 0.697]
+
+HYBRID OUTPUT:
+The text discusses the benefits of robotic process automation (RPA) in reducing errors, increasing accuracy, and boosting efficiency in various industries. RPA is a form of technology that uses software bots to automate repetitive and mundane tasks. The main points discussed in the text include:
+
+1. Reducing errors: RPA helps to reduce errors by automating manual processes, which can be time-consuming and error-prone. This reduces
+
+[HYBRID heuristic score: 0.669]
+
+====================================================================================================
+EXAMPLE 2
+PROMPT:
+### Instruction:
+Select a fitting professional title for a project manager.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Project Manager or Senior Project Manager.
+
+BASE OUTPUT:
+To select a fitting professional title for a project manager, consider the following:
+
+1. Consider the project's scope and complexity: If the project is complex and requires a high level of expertise, consider a title such as "Project Manager - Enterprise" or "Project Leader - Large-Scale Projects."
+
+2. Consider the project's timeline and budget: If the project has a tight timeline and a limited budget, consider a title such as "
+
+[Base heuristic score: 0.319]
+
+HYBRID OUTPUT:
+To select a fitting professional title for a project manager, consider the following:
+
+1. Consider the project's scope and complexity: If the project involves a complex or high-stakes endeavor, consider a title that emphasizes the project's importance and the level of responsibility it entails. For example, "Project Manager for the Implementation of the New Customer Relationship Management System" or "Project Manager for the Development and Deployment of the Next-Generation Enterprise
+
+[HYBRID heuristic score: 0.350]
+
+====================================================================================================
+EXAMPLE 3
+PROMPT:
+### Instruction:
+Rewrite the sentence so that it has a negative connotation.
+
+### Input:
+This is a great opportunity.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+This is not an ideal opportunity.
+
+BASE OUTPUT:
+Negatively, this is a terrible opportunity.
+
+[Base heuristic score: 0.715]
+
+HYBRID OUTPUT:
+Negatively, this is a disappointing opportunity.
+
+[HYBRID heuristic score: 0.295]
+
+====================================================================================================
+EXAMPLE 4
+PROMPT:
+### Instruction:
+Write an essay on the following topic: Technology's Impact On The Work Place
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Technology has had a great impact on the workplace. It has improved productivity, efficiency, and communication. In many instances, it has been used to streamline processes, reduce costs and speed up production. The use of computers, the internet, and other technological tools has enabled companies to become more agile and responsive in the global market. Technology has revolutionized the way companies operate. 
+
+There have also been some negative effects from technology, though. It can lead to increased privacy and security concerns, decreased face-to-face interaction, and job losses due to automation. However, it has also opened up new job opportunities in areas such as programming, web development, and data analysis. 
+
+Technology has transformed the workplace in many ways. It has allowed for a greater degree of flexibility in terms of working hours and locations, and has greatly improved the speed and accuracy of data processing. In large organizations, technology allows management to track projects and team performance, as well as to increase efficiency of communication between departments. Technology also enables companies to stay ahead of the competition and keep up with changing market conditions. 
+
+In conclusion, technology has changed the way the workplace operates. It has allowed organizations to become more efficient and responsive to changes in the market. While there have been some negative aspects to technology, it has improved productivity and efficiency across many industries. In the future, technology will undoubtedly continue to change the way we work. As companies and individuals strive to stay ahead of the competition, the use of technology will continue to be an essential element for success.
+
+BASE OUTPUT:
+Technology has revolutionized the workplace in countless ways, transforming the way we work, communicate, and collaborate. From the use of digital tools and software to the adoption of automation and artificial intelligence, technology has become an integral part of the modern workplace. This essay will explore the impact of technology on the workplace, examining its impact on productivity, communication, and job satisfaction.
+
+One of the most significant impacts of technology on the work
+
+[Base heuristic score: 0.755]
+
+HYBRID OUTPUT:
+Technology has revolutionized the workplace in countless ways, transforming the way we work, communicate, and collaborate. From the use of smartphones and tablets to the rise of cloud computing and artificial intelligence, technology has become an integral part of the modern workplace. This essay will explore the impact of technology on the workplace, examining its impact on productivity, communication, and employee engagement.
+
+One of the most significant impacts of technology on
+
+[HYBRID heuristic score: 0.749]
+
+====================================================================================================
+EXAMPLE 5
+PROMPT:
+### Instruction:
+Write a Java program to find the area of a triangle where the three sides are given as x, y, and z.
+
+### Input:
+x = 6, y = 7, z = 8
+
+### Response:
+
+
+REFERENCE RESPONSE:
+public class AreaOfTriangle { 
+ public static void main(String[] args) {
+  int x = 6, y = 7, z = 8;
+  double s = (x + y + z) / 2;
+  double area = Math.sqrt(s * (s - x) * (s - y) * (s - z));
+  System.out.println("Area of triangle: " + area);
+ }
+}
+
+BASE OUTPUT:
+To find the area of a triangle where the three sides are given as x, y, and z, we can use the formula:
+
+Area = (x * y) / 2
+
+Here's the Java program to calculate the area of the triangle:
+
+```java
+import java.util.Scanner;
+
+public class TriangleArea {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+[Base heuristic score: 0.801]
+
+HYBRID OUTPUT:
+import java.util.Scanner;
+
+public class TriangleArea {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Enter the length of side 1: ");
+        double x1 = input.nextDouble();
+
+        System.out.print("Enter the length of side 2: ");
+        double y1 = input.nextDouble();
+
+[HYBRID heuristic score: 0.688]
+
+====================================================================================================
+EXAMPLE 6
+PROMPT:
+### Instruction:
+Write JavaScript code to print the Fibonacci sequence.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+function printFibonacci(num) {
+    let a = 0;
+    let b = 1;
+    console.log(a);
+    console.log(b);
+  
+    for (let i = 3; i <= num; i++) {
+      const c = a + b;
+      a = b;
+      b = c;
+      console.log(c);
+    }
+}
+
+printFibonacci(10);
+
+BASE OUTPUT:
+Here's a JavaScript code to print the Fibonacci sequence:
+
+```javascript
+function fibonacci(n) {
+  if (n <= 1) {
+    return n;
+  }
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log(fibonacci(10)); // Output: 55
+```
+
+In this code, we define
+
+[Base heuristic score: 0.337]
+
+HYBRID OUTPUT:
+// Fibonacci sequence implementation in JavaScript
+
+function fibonacci(n) {
+  if (n <= 1) {
+    return n;
+  } else {
+    return fibonacci(n - 1) + fibonacci(n - 2);
+  }
+}
+
+console.log(fibonacci(10)); // Output: 55
+console.log(fibonacci(15)); //
+
+[HYBRID heuristic score: 0.275]
+
+====================================================================================================
+EXAMPLE 7
+PROMPT:
+### Instruction:
+Create a class in Python which models a bank account using the concept of class and object.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+class BankAccount: 
+ def __init__(self, name, balance): 
+  self.name = name 
+  self.balance = balance 
+ def deposit(self, amount): 
+  self.balance += amount 
+ def withdraw(self, amount): 
+  self.balance -= amount
+
+BASE OUTPUT:
+To create a class in Python that models a bank account using the concept of class and object, follow these steps:
+
+1. Define a class called BankAccount with the following attributes and methods:
+
+   ```python
+   class BankAccount:
+       def __init__(self, account_number, balance, interest_rate):
+           self.account_number = account_number
+           self.balance = balance
+           self.interest_rate = interest_rate
+
+[Base heuristic score: 0.938]
+
+HYBRID OUTPUT:
+Class BankAccount:
+    """
+    This class represents a bank account.
+    """
+
+    def __init__(self, account_number, balance, owner):
+        """
+        Constructor for BankAccount class.
+
+        Args:
+            account_number (str): The account number of the bank account.
+            balance (float): The initial balance of the bank account.
+            owner (Person): The owner of the bank account.
+        """
+
+[HYBRID heuristic score: 0.604]
+
+====================================================================================================
+EXAMPLE 8
+PROMPT:
+### Instruction:
+Calculate the maximum sum of a subarray of length k.
+
+### Input:
+Array: [1, 3, 4, 5, 20, 32]
+K: 3
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The maximum sum of a subarray of length 3 is 51 (20 + 5 +26).
+
+BASE OUTPUT:
+To calculate the maximum sum of a subarray of length k in the given array [1, 3, 4, 5, 20, 32], we can use the following steps:
+
+1. Find the length of the longest subarray that contains at least k elements. In this case, the longest subarray is [3, 4, 5], which contains 3 elements.
+
+2. Calculate the sum of the elements in the sub
+
+[Base heuristic score: 0.968]
+
+HYBRID OUTPUT:
+To calculate the maximum sum of a subarray of length k in the given array [1, 3, 4, 5, 20, 32], we can use the following Python code:
+
+```python
+k = 3
+max_sum = 0
+for I in range(len(arr)):
+    sum_so_far = arr[i] + arr[i+1] + arr[i+2]
+    if sum
+
+[HYBRID heuristic score: 0.953]
+
+====================================================================================================
+EXAMPLE 9
+PROMPT:
+### Instruction:
+Generate an appropriate question to ask a bot
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+What can you tell me about the latest advancements in artificial intelligence?
+
+BASE OUTPUT:
+Given the text: Can you generate a question to ask a bot about the weather in a specific location?
+
+Answer: How about asking the bot, "What is the current weather like in [location]?"
+
+[Base heuristic score: 0.670]
+
+HYBRID OUTPUT:
+Given the text: How can I book a table for two at your restaurant?
+
+Response: Please provide your name and email address, and we will get back to you with availability and pricing information for your preferred date and time. Thank you!
+
+[HYBRID heuristic score: 0.565]
+
+====================================================================================================
+EXAMPLE 10
+PROMPT:
+### Instruction:
+What is an example of something that does not require input parameters?
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+An example of something that does not require input parameters is a web search, such as Googling a term or phrase. The query entered by the user is the only input parameter, and no additional input is required to execute the search.
+
+BASE OUTPUT:
+An example of something that does not require input parameters is a function that returns a value without any input. For instance, the following function returns the square of a number:
+
+```python
+def square(num):
+    return num ** 2
+```
+
+This function does not require any input parameters because it takes a single argument, the number to be squared.
+
+[Base heuristic score: 0.412]
+
+HYBRID OUTPUT:
+An example of something that does not require input parameters is a function that returns a value without any input. For instance, the following function returns the square of a number:
+
+```python
+def square(num):
+    return num ** 2
+```
+
+In this function, the input parameter `num` is not required, as it is passed as an argument to the function. The function returns the square of the input number, which is calculated using the `**` operator.
+
+[HYBRID heuristic score: 0.500]
+
+====================================================================================================
+EXAMPLE 11
+PROMPT:
+### Instruction:
+Brainstorm ways of improving the customer experience
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+There are many ways to improve the customer experience, including: providing more accessible customer support, offering customization options, enhancing product quality, emphasizing customer feedback, providing rewards programs, and creating an accessible platform.
+
+BASE OUTPUT:
+1. Implement a chatbot: A chatbot is a computer program that can simulate human conversation and provide customer support. It can be programmed to answer frequently asked questions, provide product information, and handle customer inquiries.
+
+2. Offer personalized recommendations: Use customer data to provide personalized recommendations based on their preferences and past purchases. This can help improve the customer experience by providing them with products they are likely to want.
+
+3. Of
+
+[Base heuristic score: 0.355]
+
+HYBRID OUTPUT:
+1. Implement a chatbot: A chatbot can be programmed to provide customers with immediate assistance and answer frequently asked questions. This can help reduce wait times and improve customer satisfaction.
+
+2. Offer personalized recommendations: By analyzing customer data, a retailer can provide personalized recommendations based on their browsing history, purchase history, and preferences. This can help increase customer loyalty and improve the overall shopping experience.
+
+3. Offer
+
+[HYBRID heuristic score: 0.194]
+
+====================================================================================================
+EXAMPLE 12
+PROMPT:
+### Instruction:
+Use HTML and CSS to format a page with three columns, two of which contain two paragraphs each and the last containing a list of 10 items.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+<!DOCTYPE html>
+<html>
+<head>
+  <title>3 Column Layout</title>
+  <style>
+    body {
+      width: 1000px;
+      margin: 0 auto;
+    }
+    .column-left {
+      float: left;
+      width: 33%;
+    }
+    .column-center {
+      float: left;
+      width: 33%;
+    }
+    .column-right {
+      float: left;
+      width: 33%;
+    }
+  </style>
+</head>
+<body>
+  <div class="column-left">
+    <p>Paragraph 1</p>
+    <p>Paragraph 2</p>
+  </div>
+  <div class="column-center">
+    <p>Paragraph 3</p>
+    <p>Paragraph 4</p>
+  </div>
+  <div class="column-right">
+    <ul>
+      <li>Item 1</li>
+      <li>Item 2</li>
+      <li>Item 3</li>
+      <li>Item 4</li>
+      <li>Item 5</li>
+      <li>Item 6</li>
+      <li>Item 7</li>
+      <li>Item 8</li>
+      <li>Item 9</li>
+      <li>Item 10</li>
+    </ul>
+  </div>
+</body>
+</html>
+
+BASE OUTPUT:
+To format a page with three columns, two of which contain two paragraphs each and the last containing a list of 10 items, you can use the following HTML and CSS code:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Three Columns with List</title>
+	<style>
+		body {
+			background-color: #f2f2f2;
+			margin
+
+[Base heuristic score: 0.518]
+
+HYBRID OUTPUT:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three Columns with List</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif
+
+[HYBRID heuristic score: 0.268]
+
+====================================================================================================
+EXAMPLE 13
+PROMPT:
+### Instruction:
+Summarize this blog post about artificial intelligence.
+
+### Input:
+In recent years, artificial intelligence (AI) has developed rapidly and become more advanced. AI has been applied in a number of areas, such as healthcare, finance, and manufacturing, with the potential to revolutionize these industries. AI can also help solve complex problems that require large-scale data analysis and machine learning. AI is also becoming more accessible, with tools like software-as-a-service making it easier to access and use.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+AI has grown rapidly and has many potential applications in areas such as healthcare, finance, and manufacturing. AI is able to process, analyze and utilize large volumes of data, and is becoming increasingly accessible thanks to tools like software-as-a-service. It is likely to revolutionize many industries in the near future.
+
+BASE OUTPUT:
+This blog post discusses the advancements in artificial intelligence (AI) and how it has impacted various industries, including healthcare, finance, and manufacturing. AI has been applied in various areas, including healthcare, where it has helped in diagnosing and treating diseases, and in finance, where it has been used to automate financial transactions and improve risk management. AI has also been used in manufacturing, where it has helped in improving product
+
+[Base heuristic score: 0.520]
+
+HYBRID OUTPUT:
+Artificial Intelligence (AI) has made significant strides in recent years, with its applications in various industries, including healthcare, finance, and manufacturing. AI has been used to improve healthcare by providing personalized treatment plans, predicting patient outcomes, and enhancing medical decision-making. AI has also been used in finance to automate financial analysis and trading, reducing costs and improving accuracy. AI has also been applied in manufact
+
+[HYBRID heuristic score: 0.530]
+
+====================================================================================================
+EXAMPLE 14
+PROMPT:
+### Instruction:
+Make this sentence more polite.
+
+### Input:
+You should do that as soon as possible
+
+### Response:
+
+
+REFERENCE RESPONSE:
+If possible, could you please do that as soon as possible?
+
+BASE OUTPUT:
+To make this sentence more polite, you can replace "as soon as possible" with "as soon as possible, please". This will convey a more formal tone and emphasize the urgency of the task.
+
+[Base heuristic score: 0.667]
+
+HYBRID OUTPUT:
+Please do that as soon as possible.
+
+[HYBRID heuristic score: 0.400]
+
+====================================================================================================
+EXAMPLE 15
+PROMPT:
+### Instruction:
+Determine the irony in the following text.
+
+### Input:
+She boasts about being humble.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The statement contains verbal irony, since the person is claiming to be humble but in actually doing so highlights arrogance.
+
+BASE OUTPUT:
+The irony in the given text is that the speaker is boasting about being humble, which is a common trait among humble individuals. This is evident from the fact that the speaker is using the word "boast" to describe their own behavior, which is a common trait among boastful individuals. The irony lies in the fact that the speaker is using humility as a means of boasting about themselves, which is a common trait among boastful individuals.
+
+[Base heuristic score: 0.346]
+
+HYBRID OUTPUT:
+The irony in this text is that the speaker is boasting about being humble, which is a common trait among people who are not self-centered or arrogant. The speaker's own self-assurance and confidence are evident in their boasting, which is a clear contrast to their own humility. The text highlights the importance of recognizing and embracing one's own flaws and shortcomings, rather than trying to present a perfect image
+
+[HYBRID heuristic score: 0.385]
+
+====================================================================================================
+EXAMPLE 16
+PROMPT:
+### Instruction:
+Rewrite the following sentence so that it includes one fewer subordinate clause.
+
+### Input:
+When the Queen of Hearts is introduced as a character in the story, it is evident she is a force which must be reckoned with.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The Queen of Hearts is introduced as a formidable character in the story.
+
+BASE OUTPUT:
+When the Queen of Hearts is introduced as a character in the story, it is evident that she is a force which must be reckoned with.
+
+[Base heuristic score: 0.688]
+
+HYBRID OUTPUT:
+When the Queen of Hearts is introduced as a character in the story, it is clear that she is a powerful force to be reckoned with.
+
+[HYBRID heuristic score: 0.594]
+
+====================================================================================================
+EXAMPLE 17
+PROMPT:
+### Instruction:
+Rewrite the following sentence: "He was so tired, he fell asleep."
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+He was so exhausted that he succumbed to sleep.
+
+BASE OUTPUT:
+Rewrite the sentence "He was so tired, he fell asleep." into a more formal and polished version:
+
+He was so exhausted, he fell asleep.
+
+[Base heuristic score: 0.667]
+
+HYBRID OUTPUT:
+He fell asleep, exhausted, after a long day of work.
+
+[HYBRID heuristic score: 0.267]
+
+====================================================================================================
+EXAMPLE 18
+PROMPT:
+### Instruction:
+Find the words related to "wind".
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Gale, breezy, bluster, gust, squall, gusty, air, gusty breeze, windy, zephyr.
+
+BASE OUTPUT:
+To find the words related to "wind" in a given text, you can use a regular expression pattern like this:
+
+```
+import re
+
+text = "The wind blew through the trees, rustling leaves and whispering in the breeze."
+pattern = re.compile(r"[^\w\s]+")
+matches = pattern.findall(text)
+print(matches)
+```
+
+This code uses the `re.compile()` function
+
+[Base heuristic score: 0.438]
+
+HYBRID OUTPUT:
+1. Blowing Breeze
+2. Gale Force Winds
+3. Hurricane Force Wind
+4. Gusty Winds
+5. Sustained Wind
+6. Turbulent Winds
+7. Winds of Change
+8. Winds of Change (Reprise)
+9. Winds of Change (Reprise (Continued))
+10. Winds of Change (Reprise (Continued)) (Reprise)
+
+[HYBRID heuristic score: 0.250]
+
+====================================================================================================
+EXAMPLE 19
+PROMPT:
+### Instruction:
+Replace the punctuation with a semicolon.
+
+### Input:
+She was exhausted she had been working all day
+
+### Response:
+
+
+REFERENCE RESPONSE:
+She was exhausted; she had been working all day.
+
+BASE OUTPUT:
+She was exhausted; she had been working all day.
+
+[Base heuristic score: 0.571]
+
+HYBRID OUTPUT:
+She was exhausted, having been working all day.
+
+[HYBRID heuristic score: 0.500]
+
+====================================================================================================
+EXAMPLE 20
+PROMPT:
+### Instruction:
+Convert the sentence from active to passive.
+
+### Input:
+Jack planted a tree.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+A tree was planted by Jack.
+
+BASE OUTPUT:
+In passive voice, the sentence "Jack planted a tree" would be written as:
+
+"A tree was planted by Jack."
+
+[Base heuristic score: 0.692]
+
+HYBRID OUTPUT:
+In Jack's act of planting a tree, the action was performed by him.
+
+[HYBRID heuristic score: 0.462]
+
+====================================================================================================
+EXAMPLE 21
+PROMPT:
+### Instruction:
+Transform the given text into third person.
+
+### Input:
+I love going to the beach.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+He loves going to the beach.
+
+BASE OUTPUT:
+Transformed into third person:
+
+I love going to the beach.
+
+[Base heuristic score: 0.643]
+
+HYBRID OUTPUT:
+She loves going to the beach.
+
+[HYBRID heuristic score: 0.357]
+
+====================================================================================================
+EXAMPLE 22
+PROMPT:
+### Instruction:
+Write a Python function to calculate the factorial of a number (a non-negative integer).
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+def factorial(num):
+    """
+    Calculates factorial of a given number.
+    """
+    # Base case
+    if num == 0:
+        return 1
+    # Recursion
+    else:
+        return num * factorial(num-1)
+
+BASE OUTPUT:
+To calculate the factorial of a non-negative integer, you can use the `factorial()` function from the `math` module. Here's an example:
+
+```python
+import math
+
+def calculate_factorial(num):
+    if num <= 0:
+        raise ValueError("Input must be a non-negative integer")
+
+    return math.factorial(num)
+
+# Example usage
+print(calculate_factorial(5
+
+[Base heuristic score: 0.752]
+
+HYBRID OUTPUT:
+Def factorial(num):
+    """
+    Calculates the factorial of a non-negative integer.
+
+    Args:
+        num (int): The non-negative integer to calculate the factorial of.
+
+    Returns:
+        int: The factorial of num.
+    """
+    if num <= 0:
+        raise ValueError("Input number must be non-negative.")
+
+    if num == 1:
+        return
+
+[HYBRID heuristic score: 0.764]
+
+====================================================================================================
+EXAMPLE 23
+PROMPT:
+### Instruction:
+A new restaurant has opened up in town. Come up with six menu items that the restaurant could serve.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+1. Grilled Vegetable Medley
+2. Frittata with Fresh Herbs
+3. Spicy Buffalo Wings
+4. Grilled Steak with Garlic Mushroom Sauce
+5. Slow-Roasted Salmon with Lemon-Dill Aioli
+6. Baked Mac & Cheese with Crispy Bacon Topping
+
+BASE OUTPUT:
+1. Grilled Chicken Sandwich - Grilled chicken breast, lettuce, tomato, and mayo on a brioche bun.
+2. Veggie Burger - Grilled portobello mushroom, avocado, tomato, and a side of ketchup.
+3. Shrimp Scampi - Grilled shrimp, garlic, and a side of pasta.
+4. Chicken Tikka Masala -
+
+[Base heuristic score: 0.167]
+
+HYBRID OUTPUT:
+1. Grilled Chicken Sandwich - Grilled chicken breast, lettuce, tomato, and mayo on a brioche bun.
+2. Veggie Burger - Grilled portobello mushroom, avocado, tomato, and a side of ketchup.
+3. Shrimp Scampi - Grilled shrimp, garlic butter, and a side of garlic bread.
+4. Chicken Tikka
+
+[HYBRID heuristic score: 0.167]
+
+====================================================================================================
+EXAMPLE 24
+PROMPT:
+### Instruction:
+Identify the infinitive form of this verb.
+
+### Input:
+He likes to sing.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The infinitive form of the verb is "to sing".
+
+BASE OUTPUT:
+The infinitive form of the verb "likes" is "to like".
+
+[Base heuristic score: 0.667]
+
+HYBRID OUTPUT:
+I like to sing.
+
+[HYBRID heuristic score: 0.167]
+
+====================================================================================================
+EXAMPLE 25
+PROMPT:
+### Instruction:
+Using a list comprehension, create a filtered list which contains numbers that are divisible by 2.
+
+### Input:
+nums = [1, 2, 3, 4, 5, 6]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+filtered_list = [num for num in nums if num % 2 == 0]
+
+BASE OUTPUT:
+To create a filtered list containing only numbers that are divisible by 2 using a list comprehension, we can use the `filter()` function with a lambda function that checks if a number is divisible by 2. Here's an example:
+
+```python
+nums = [1, 2, 3, 4, 5, 6]
+filtered_nums = [num for num in nums if num % 2 == 0]
+
+[Base heuristic score: 0.920]
+
+HYBRID OUTPUT:
+To create a filtered list containing only numbers that are divisible by 2 using a list comprehension, we can use the `filter()` function with a lambda function that checks if the number is divisible by 2. Here's the code:
+
+```python
+nums = [1, 2, 3, 4, 5, 6]
+filtered_nums = [num for num in nums if num % 2 == 0]
+
+[HYBRID heuristic score: 0.920]
+
+====================================================================================================
+EXAMPLE 26
+PROMPT:
+### Instruction:
+Create a program in Java to reverse a sentence.
+
+### Input:
+This is a sample sentence.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+String input = "This is a sample sentence";
+
+String reversed = new StringBuffer(input)
+             .reverse()
+             .toString();
+    
+System.out.println(reversed);
+
+BASE OUTPUT:
+To reverse a sentence in Java, you can use the following code:
+
+```java
+import java.util.Scanner;
+
+public class ReverseSentence {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter a sentence: ");
+        String inputString = input.nextLine();
+        String reversedString = reverseSentence(inputString);
+
+[Base heuristic score: 0.632]
+
+HYBRID OUTPUT:
+Import java.util.Scanner;
+
+public class ReverseSentence {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Enter a sentence: ");
+        String inputString = input.nextLine();
+        String reversedString = reverseSentence(inputString);
+        System.out.println("Reversed sentence: " + reversedString
+
+[HYBRID heuristic score: 0.865]
+
+====================================================================================================
+EXAMPLE 27
+PROMPT:
+### Instruction:
+List three popular beliefs about men that are not true
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+1. Men are always emotionally strong.
+2. Men do not pay attention to their appearance.
+3. Men are not capable of multitasking.
+
+BASE OUTPUT:
+Sure, here are three popular beliefs about men that are not true:
+
+1. Men are more likely to cheat on their partners than women.
+
+This is a common belief among some people, but it's not true. A study published in the Journal of Personality and Social Psychology found that men are just as likely as women to cheat on their partners.
+
+2. Men are more likely to be violent than women.
+
+This is another common
+
+[Base heuristic score: 0.560]
+
+HYBRID OUTPUT:
+1. Men are not as emotionally intelligent as women.
+False. Men are just as emotionally intelligent as women, if not more so. Studies have shown that men and women have similar emotional regulation abilities, and men are just as likely to experience emotions as women.
+
+2. Men are not as emotionally stable as women.
+False. Men are just as likely to experience emotional distress as women, and they can also recover
+
+[HYBRID heuristic score: 0.320]
+
+====================================================================================================
+EXAMPLE 28
+PROMPT:
+### Instruction:
+Describe the auditory cortex.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The auditory cortex is the part of the cerebral cortex involved in the processing of auditory information. It is located in the temporal lobe and its main function is to process sound, including pitch, rhythm, frequency, and localization of sound sources. It is also involved in the processing of linguistic, emotional, and musical auditory stimuli.
+
+BASE OUTPUT:
+The auditory cortex is a region of the brain responsible for processing auditory information. It is located in the temporal lobe and is composed of several subregions, including the auditory cortex, auditory thalamus, and auditory nucleus.
+
+The auditory cortex is divided into two main areas: the superior and inferior temporal cortex. The superior temporal cortex is responsible for processing high-frequency sounds, while the inferior temporal cortex is responsible
+
+[Base heuristic score: 0.471]
+
+HYBRID OUTPUT:
+The auditory cortex is a region of the brain responsible for processing auditory information. It is located in the temporal lobe and is composed of several subregions, including the superior temporal gyrus, the parietal lobe, and the occipital lobe.
+
+The superior temporal gyrus is the largest and most prominent region of the auditory cortex, and it is responsible for processing high-frequency sounds. It contains several subregions, including the superior
+
+[HYBRID heuristic score: 0.441]
+
+====================================================================================================
+EXAMPLE 29
+PROMPT:
+### Instruction:
+Write a function to check whether two lists are equal.
+
+### Input:
+list1=[1,2,3,4,5]
+list2=[1,2,3,4,5]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+def equal(list1, list2):
+    if len(list1) != len(list2):
+        return False
+    
+    for i in range(len(list1)):
+        if list1[i] != list2[i]:
+            return False
+    return True
+
+BASE OUTPUT:
+Yes, you can write a function to check whether two lists are equal using Python's built-in `==` operator. Here's an example:
+
+```python
+def check_lists_equal(list1, list2):
+    """
+    Checks whether two lists are equal using the == operator.
+    :param list1: The first list to compare.
+    :param list2: The second list to compare.
+    :return: True if
+
+[Base heuristic score: 0.630]
+
+HYBRID OUTPUT:
+Def equal_lists(list1, list2):
+    """
+    This function checks whether two given lists are equal.
+    It takes two lists as input and returns True if they are equal, False otherwise.
+    """
+    if len(list1) != len(list2):
+        return False
+    
+    for I in range(len(list1)):
+        if list1[i] != list2[i]:
+            return False
+
+[HYBRID heuristic score: 0.667]
+
+====================================================================================================
+EXAMPLE 30
+PROMPT:
+### Instruction:
+Based on the input, formulate a hypothesis regarding the past.
+
+### Input:
+In the 1800s, there was a sharp decline in the population of American bison.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+My hypothesis is that the sharp decline in the population of American bison in the 1800s was caused by overhunting.
+
+BASE OUTPUT:
+Based on the given input, we can formulate the hypothesis that the population of American bison declined sharply in the 1800s. This hypothesis can be tested by analyzing historical data and comparing it to current population estimates. The decline in the population of American bison can be attributed to various factors, such as habitat loss, hunting, and disease. By understanding the causes and consequences of this decline, we can develop strategies to protect and restore the species
+
+[Base heuristic score: 0.600]
+
+HYBRID OUTPUT:
+Hypothesis: The sharp decline in the population of American bison in the 1800s was due to a combination of factors, including habitat loss, hunting, and disease. These factors contributed to the decline in the population, which ultimately led to the extinction of the species in the wild. The decline in the population was significant and had a significant impact on the ecosystem, as the bison were an important predator and keystone species in
+
+[HYBRID heuristic score: 0.520]
+
+====================================================================================================
+EXAMPLE 31
+PROMPT:
+### Instruction:
+Count the number of vowels in the phrase "It's never too late to dream".
+
+### Input:
+It's never too late to dream
+
+### Response:
+
+
+REFERENCE RESPONSE:
+There are 8 vowels in the phrase "It's never too late to dream": i, e, e, o, a, e, o, a.
+
+BASE OUTPUT:
+The program will count the number of vowels in the phrase "It's never too late to dream". The input string "It's never too late to dream" will be processed and the output will be "1".
+
+[Base heuristic score: 0.667]
+
+HYBRID OUTPUT:
+The program counts the number of vowels in the phrase "It's never too late to dream" by using the built-in Python function `count()`. The input string is passed as an argument to the function, and the count of vowels is returned. The output is displayed to the user.
+
+[HYBRID heuristic score: 0.667]
+
+====================================================================================================
+EXAMPLE 32
+PROMPT:
+### Instruction:
+Construct a musical composition that has a theme of an adventure.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+<Musical Composition>
+
+BASE OUTPUT:
+Title: Adventure Theme
+
+Verse 1:
+In the heart of the jungle,
+Where the sun sets in a fiery blaze,
+Amidst the rustling leaves and the chirping birds,
+Amidst the wild and the wondrous.
+
+Chorus:
+Adventure, the thrill it brings,
+A journey to the unknown,
+A chance to explore, to discover,
+A chance to live
+
+[Base heuristic score: 0.400]
+
+HYBRID OUTPUT:
+Title: The Adventure
+
+Verse 1:
+In the heart of the jungle,
+Where the sun sets in a fiery blaze,
+A group of explorers set out,
+On a journey to uncover the secrets.
+
+Chorus:
+Let's set out on an adventure,
+To explore the unknown lands,
+Through the dense jungle,
+We'll find our way, with courage and grace
+
+[HYBRID heuristic score: 0.400]
+
+====================================================================================================
+EXAMPLE 33
+PROMPT:
+### Instruction:
+What is the most successful marriage proposal in history?
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The most successful marriage proposal in history is thought to be the one Prince William used when he proposed to Catherine Middleton at the Royal Lodge in 20
+
+BASE OUTPUT:
+The most successful marriage proposal in history is the proposal made by Prince Harry and Meghan Markle during their engagement in 2017. The proposal was a surprise, and the couple's engagement was announced on the same day. The proposal was captured on video and went viral, with millions of people watching and sharing the news. The proposal was a heartfelt and romantic gesture that showed the couple's commitment to each other and their love for each other.
+
+[Base heuristic score: 0.400]
+
+HYBRID OUTPUT:
+The most successful marriage proposal in history was made by actor Tom Hanks to actress Rita Wilson in 2004. Hanks proposed to Wilson during a romantic dinner at the couple's home in Australia, where they were celebrating Wilson's 50th birthday. The proposal was a surprise, as Hanks had been secretly dating Wilson for several months beforehand. The couple married in 2006, and Hanks has since become a frequent
+
+[HYBRID heuristic score: 0.400]
+
+====================================================================================================
+EXAMPLE 34
+PROMPT:
+### Instruction:
+Write a paragraph about the importance of goal setting.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Goal setting is an essential part of success. It is the process of setting objectives, planning how to achieve them, and measuring the progress made. It allows you to stay focused on what you want to achieve and helps to keep you motivated and on track. By setting clear and achievable goals, you can make sure that you stay on track and don't get sidetracked by life's distractions. Setting goals also makes it easier to track progress so that you can adjust and revise goals as needed. Overall, goal setting is a powerful tool that will help you reach your dreams and make it easier to stay on the path to success.
+
+BASE OUTPUT:
+Goal setting is an essential aspect of personal and professional development. It helps individuals to achieve their long-term and short-term objectives, set realistic goals, and track their progress towards achieving them. Goal setting helps individuals to stay motivated, focused, and committed to their goals, which ultimately leads to increased productivity, improved performance, and a sense of accomplishment.
+
+Goal setting is crucial for individuals who want to achieve their career goals, such as landing
+
+[Base heuristic score: 0.319]
+
+HYBRID OUTPUT:
+Goal setting is an essential aspect of personal and professional growth. It helps individuals to identify their objectives, set achievable goals, and track their progress towards achieving them. Goal setting helps individuals to stay focused, motivated, and accountable, which ultimately leads to increased productivity, improved performance, and a sense of accomplishment. Here are some reasons why goal setting is crucial:
+
+1. Improved Productivity: Setting achievable goals helps individuals to focus their
+
+[HYBRID heuristic score: 0.290]
+
+====================================================================================================
+EXAMPLE 35
+PROMPT:
+### Instruction:
+Create a CSS class that colors any text within its scope with blue.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+.blue {
+    color: blue;
+}
+
+BASE OUTPUT:
+To create a CSS class that colors any text within its scope with blue, you can use the `:host` selector and the `color` property. Here's an example:
+
+```css
+.blue {
+  color: blue;
+}
+
+.my-element {
+  /* ... */
+}
+
+.my-element:host {
+  /* ... */
+}
+```
+
+In this example, the `:host` selector is used to apply the
+
+[Base heuristic score: 1.000]
+
+HYBRID OUTPUT:
+To create a CSS class that colors any text within its scope with blue, you can use the `:host` selector and the `color` property. Here's an example:
+
+```css
+.blue {
+  color: blue;
+}
+
+.my-element {
+  /* Your element's styles here */
+}
+
+.my-element:host {
+  /* Your element's styles here */
+  /* Apply the blue color to the
+
+[HYBRID heuristic score: 1.000]
+
+====================================================================================================
+EXAMPLE 36
+PROMPT:
+### Instruction:
+Describe why a government might impose a ban on its citizens travelling to certain countries.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+A government may choose to impose a ban on its citizens travelling to certain countries for a number of reasons. The government may view the security situation in those countries as unsafe, or they may be concerned about the potential for their citizens to become involved in illegal activities in those countries. If a country is in the midst of ongoing conflict, a government may also impose a travel ban for the safety of its citizens. Additionally, a government may impose a ban in order to prevent the spread of dangerous communicable diseases.
+
+BASE OUTPUT:
+A government might impose a ban on its citizens travelling to certain countries for several reasons. Firstly, a ban can be implemented to prevent the spread of COVID-19, which has been a major concern globally. The ban can be imposed to prevent the spread of the virus, which can lead to a significant increase in cases and deaths.
+
+Secondly, a ban can be imposed to protect the country's economy and infrastructure. The ban can be implemented
+
+[Base heuristic score: 0.382]
+
+HYBRID OUTPUT:
+In the wake of the COVID-19 pandemic, governments around the world have taken drastic measures to contain the spread of the virus. One of the most significant measures taken by governments is the ban on citizens travelling to certain countries. This ban is imposed to prevent the spread of the virus and protect the health and safety of citizens.
+
+The decision to ban travel to certain countries is often made based on the risk of transmission of the virus. Countries with high
+
+[HYBRID heuristic score: 0.273]
+
+====================================================================================================
+EXAMPLE 37
+PROMPT:
+### Instruction:
+Generate at least two example sentences using the verb "incite".
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The politician sought to incite the crowd with her inflammatory speech. \\
+The protesters were incited to march to the city hall by the speech.
+
+BASE OUTPUT:
+1. The government's decision to incite violence in the country has led to widespread protests and clashes with police.
+
+2. The president's incessant rhetoric has led to a rise in hate speech and incitement to violence against minority groups.
+
+[Base heuristic score: 0.200]
+
+HYBRID OUTPUT:
+1. The government's decision to incite public opinion against the opposition party has sparked widespread protests and calls for change.
+
+2. The recent rise in inflation has incentivized the government to incite public opinion against the opposition party, leading to widespread protests and calls for change.
+
+[HYBRID heuristic score: 0.120]
+
+====================================================================================================
+EXAMPLE 38
+PROMPT:
+### Instruction:
+Name some festivals celebrated in India
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Some festivals celebrated in India include Holi, Diwali, Dusshera, Ganesh Chaturthi, Pongal, and Onam.
+
+BASE OUTPUT:
+Yes, here are some festivals celebrated in India:
+
+1. Diwali (October/November) - a festival of lights, celebrated with fireworks, sweets, and family gatherings.
+
+2. Holi (March/April) - a colorful festival of love and joy, celebrated with water-based games, music, and dancing.
+
+3. Eid al-Fitr (July/August) - a Muslim
+
+[Base heuristic score: 0.533]
+
+HYBRID OUTPUT:
+1. Diwali (October/November) - Celebrated with lights, sweets, and fireworks, Diwali is the festival of lights that marks the victory of light over darkness.
+
+2. Holi (March/April) - A colorful festival of love and joy, Holi is celebrated with the throwing of colorful powders and water on each other.
+
+3. Ganesh Chaturthi (August/September
+
+[HYBRID heuristic score: 0.400]
+
+====================================================================================================
+EXAMPLE 39
+PROMPT:
+### Instruction:
+Name a metric to measure engagement in a webinar.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+One metric to measure engagement in a webinar can be the percentage of attendees who have interacted with the content of the webinar. This metric can be measured by looking at the number of attendees who have asked questions, have responded to polls, or have shared their thoughts or opinions in the chatroom.
+
+BASE OUTPUT:
+To measure engagement in a webinar, a metric commonly used is the "attendance rate" or the percentage of attendees who completed the webinar. This metric can be calculated by dividing the total number of attendees by the number of scheduled sessions, and multiplying by 100. For example, if 100 attendees completed the webinar, the attendance rate would be 100/100 = 1
+
+[Base heuristic score: 0.500]
+
+HYBRID OUTPUT:
+The metric to measure engagement in a webinar is the number of attendees who completed the webinar. This metric can be tracked using tools such as Zoom Analytics, which provides detailed insights into attendee behavior, including the number of attendees who completed the webinar, the average time spent on the webinar, and the percentage of attendees who left early. By monitoring these metrics, webinar organizers can identify areas for improvement
+
+[HYBRID heuristic score: 0.472]
+
+====================================================================================================
+EXAMPLE 40
+PROMPT:
+### Instruction:
+Write a quick SQL query to find the oldest employee in a given department.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+SELECT * FROM employees
+WHERE department_id = :department_id
+ORDER BY dob DESC
+LIMIT 1;
+
+BASE OUTPUT:
+To find the oldest employee in a given department, you can use the `ORDER BY` clause with the `DESC` keyword to sort the results in descending order. Here's an example SQL query:
+
+```sql
+SELECT EMPLOYEE_ID, EMPLOYEE_NAME, EMPLOYEE_AGE, DEPARTMENT_ID
+FROM EMPLOYEE
+ORDER BY EMPLOYEE_AGE DESC, DEPARTMENT
+
+[Base heuristic score: 0.708]
+
+HYBRID OUTPUT:
+SELECT EMPLOYEE_ID, EMPLOYEE_NAME, DEPARTMENT_NAME, DATE_OF_BIRTH, AGE
+FROM EMPLOYEE
+WHERE DEPARTMENT_ID = (SELECT DEPARTMENT_ID FROM DEPARTMENT WHERE DEPARTMENT_NAME = 'Marketing')
+AND DATE_OF_BIRTH < (SELECT MAX(DATE_OF_BIRTH) FROM EMPLOYEE);
+
+[HYBRID heuristic score: 0.250]
+
+====================================================================================================
+EXAMPLE 41
+PROMPT:
+### Instruction:
+Create an algorithm to calculate the mean of given data.
+
+### Input:
+[5, 10, 15]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The algorithm to calculate the mean of the given data is:
+
+1. Count the number of values in the given data (n). 
+2. Calculate the total of the given data (total).
+3. Calculate the mean: mean = (total/n).
+
+BASE OUTPUT:
+To calculate the mean of the given data set [5, 10, 15], we can use the following algorithm:
+
+1. Initialize the mean to 0.
+2. For each element in the data set:
+    a. Add the element to the mean.
+    b. If the element is greater than the current maximum, update the maximum to the current element.
+    c. If the element is less than the current minimum, update the minimum to
+
+[Base heuristic score: 0.896]
+
+HYBRID OUTPUT:
+Here's a Python program that calculates the mean of the given data:
+
+```python
+def calculate_mean(numbers):
+    total = sum(numbers)
+    count = len(numbers)
+    mean = total / count
+    return mean
+
+numbers = [5, 10, 15]
+print(calculate_mean(numbers))  # Output: 12.5
+```
+
+In this program, we define a
+
+[HYBRID heuristic score: 0.507]
+
+====================================================================================================
+EXAMPLE 42
+PROMPT:
+### Instruction:
+How can we remove duplicate elements from a given array?
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+We can use a set data structure to remove duplicate elements from a given array. Sets are collections of unique elements, so when the elements are added to the set, the duplicate elements are automatically removed.
+
+Example:
+
+arr = [1,2,3,3,4,5,5]
+arr = list(set(arr)) # arr will be [1,2,3,4,5]
+
+BASE OUTPUT:
+To remove duplicate elements from a given array in JavaScript, we can use the `filter()` method with a predicate function. Here's an example:
+
+```javascript
+const array = [1, 2, 3, 4, 5];
+const filteredArray = array.filter(num => num !== array.find(num => num === num));
+console.log(filteredArray); // Output: [1, 2, 3, 4,
+
+[Base heuristic score: 0.500]
+
+HYBRID OUTPUT:
+To remove duplicate elements from a given array in JavaScript, we can use the filter() method with a predicate function. Here's an example:
+
+```javascript
+const array = [1, 2, 3, 4, 5];
+const filteredArray = array.filter(function(value, index, self) {
+  return self.indexOf(value) === index;
+});
+console.log(filteredArray); // Output: [1,
+
+[HYBRID heuristic score: 0.500]
+
+====================================================================================================
+EXAMPLE 43
+PROMPT:
+### Instruction:
+Translate the following sentence from Spanish to English: "Su madre está muy orgullosa."
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Your mother is very proud.
+
+BASE OUTPUT:
+En español: "Su madre está muy orgullosa."
+
+En inglés: "Mom is very proud."
+
+[Base heuristic score: 0.444]
+
+HYBRID OUTPUT:
+Su madre es muy orgullosa.
+
+[HYBRID heuristic score: 0.222]
+
+====================================================================================================
+EXAMPLE 44
+PROMPT:
+### Instruction:
+Analyze the relationship between the two characters in the following scene.
+
+### Input:
+The two men stood by the lake, silent and still.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The two men in the scene seem to have a strong connection, yet they are not speaking to each other. The silence and stillness implies a deep understanding and trust between them, as if there is an unspoken bond that cannot be put into words.
+
+BASE OUTPUT:
+The scene you provided, "The two men stood by the lake, silent and still," is a dialogue between two characters. The dialogue is a conversation between the two men, and the silence and stillness are the result of their conversation. The two men are not interacting with each other, but rather observing the lake and the surroundings. The dialogue highlights the isolation and detachment of the two characters, as they are both focused on their own thoughts and emot
+
+[Base heuristic score: 0.449]
+
+HYBRID OUTPUT:
+The scene depicts two men, one of whom is a wealthy businessman and the other a struggling artist, standing by the tranquil lake. The silence between them is palpable, as if they are both lost in thought. The businessman, John, is dressed in a suit and tie, while the artist, Tom, is dressed in a loose-fitting t-shirt and jeans. They both seem to be lost in their own worlds, lost in
+
+[HYBRID heuristic score: 0.429]
+
+====================================================================================================
+EXAMPLE 45
+PROMPT:
+### Instruction:
+Write an SQL query to retrieve all the columns and the total count of each column record from a table.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+SELECT *, COUNT(*) AS total_count FROM [table_name] GROUP BY *;
+
+BASE OUTPUT:
+To retrieve all the columns and the total count of each column record from a table using SQL, you can use the following query:
+
+```
+SELECT column_name, COUNT(*) AS total_count
+FROM table_name
+GROUP BY column_name
+```
+
+In this query, `column_name` is the name of the column you want to retrieve, and `COUNT(*) AS total_count` is the total count of the column. The `GROUP BY` clause is
+
+[Base heuristic score: 0.917]
+
+HYBRID OUTPUT:
+SELECT column_name, COUNT(*) AS total_count
+FROM table_name
+GROUP BY column_name
+ORDER BY total_count DESC;
+
+[HYBRID heuristic score: 0.417]
+
+====================================================================================================
+EXAMPLE 46
+PROMPT:
+### Instruction:
+Change the font size of the text in a webpage from 12px to 24px.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+style="font-size:24px;"
+
+BASE OUTPUT:
+To change the font size of the text in a webpage from 12px to 24px, you can use the CSS `font-size` property. Here's an example:
+
+```css
+body {
+  font-size: 24px;
+}
+```
+
+In this example, the `body` element has a font size of 24 pixels. You can adjust the value of `24px` to match your desired font size
+
+[Base heuristic score: 0.929]
+
+HYBRID OUTPUT:
+To change the font size of the text in a webpage from 12px to 24px, follow these steps:
+
+1. Open your web browser and navigate to the webpage you want to modify.
+2. Click on the "View" menu located at the top-right corner of the webpage.
+3. Select "View Page Source" from the drop-down menu.
+4. Scroll down to the "CSS" section and locate the "font-size"
+
+[HYBRID heuristic score: 0.929]
+
+====================================================================================================
+EXAMPLE 47
+PROMPT:
+### Instruction:
+Classify the type of article in a given URL
+
+### Input:
+https://www.nytimes.com/2021/06/07/fashion/supreme-top-level-domain.html
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Fashion Article.
+
+BASE OUTPUT:
+The given URL https://www.nytimes.com/2021/06/07/fashion/supreme-top-level-domain.html is a news article.
+
+[Base heuristic score: 0.818]
+
+HYBRID OUTPUT:
+The given URL https://www.nytimes.com/2021/06/07/fashion/supreme-top-level-domain.html is a news article about Supreme, a luxury fashion brand. The article is categorized as "Fashion" and is located at the top level domain (TLD) of "supreme." The TLD is a top-level domain (TLD) that is used to identify the domain name of a website
+
+[HYBRID heuristic score: 0.864]
+
+====================================================================================================
+EXAMPLE 48
+PROMPT:
+### Instruction:
+Write an algorithm to find all prime numbers less than or equal to a given integer n.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+An algorithm for finding all prime numbers up to a given integer n can be written as follows: 
+
+1. Create an empty array to hold all the prime numbers found. 
+2. Iterate from 2 to n, and for each number check if it is prime. 
+3. To check for primality, divide the number by every integer up to its square root. 
+4. If no divisors are found, add the number to the array of primes. 
+5. After the iteration is complete, return the array of primes.
+
+BASE OUTPUT:
+To find all prime numbers less than or equal to a given integer n, we can use the following algorithm:
+
+1. Initialize a variable `prime` to 2.
+2. Loop through all numbers from 2 to n.
+3. If the current number is prime, set `prime` to 0.
+4. If `prime` is 0, break out of the loop.
+5. If `prime` is 1, break out of the loop
+
+[Base heuristic score: 0.426]
+
+HYBRID OUTPUT:
+Here's a Python program that finds all prime numbers less than or equal to a given integer n:
+
+```python
+def is_prime(num):
+    # Base case: if num is 1 or 2, return True
+    if num == 1 or num == 2:
+        return True
+    
+    # Recursive case: check if num is divisible by any integer less than or equal to itself
+    for I in range(3,
+
+[HYBRID heuristic score: 0.344]
+
+====================================================================================================
+EXAMPLE 49
+PROMPT:
+### Instruction:
+Create a HTML page with a table showing the contact information of all members in a information.
+
+### Input:
+[ 
+    { "name": "John", "phone": "123-456-7890", "address": "123 Main Street" }, 
+    { "name": "Sarah", "phone": "098-765-4321", "address": "456 Ocean Drive" } 
+]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Member Contact Information</title>
+    </head>
+    <body>
+        <h1>Member Contact Information</h1>
+        <table>
+            <thead>
+                <tr><th>Name</th></tr>
+                <tr><th>Phone</th></tr>
+                <tr><th>Address</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>John</td><td>123-456-7890</td><td>123 Main Street</td></tr>
+                <tr><td>Sarah</td><td>098-765-4321</td><td>456 Ocean Drive</td></tr>
+            </tbody>
+        </table>
+    </body>
+</html>
+
+BASE OUTPUT:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Information</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text
+
+[Base heuristic score: 0.250]
+
+HYBRID OUTPUT:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Information</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table, th, td {
+
+[HYBRID heuristic score: 0.250]
+
+====================================================================================================
+EXAMPLE 50
+PROMPT:
+### Instruction:
+Format this sentence according to Chicago Style for citations and bibliography: "April 4, 1901 is the date of Teddy Roosevelt's first Presidential Inauguration".
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Roosevelt, Theodore. “Teddy Roosevelt's First Presidential Inauguration.” April 4, 1901.
+
+BASE OUTPUT:
+Citation:
+April 4, 1901 is the date of Teddy Roosevelt's first Presidential Inauguration, as cited in "April 4, 1901 is the date of Teddy Roosevelt's first Presidential Inauguration" by John F. Kennedy, published in The New York Times on April 4, 1961.
+
+[Base heuristic score: 0.520]
+
+HYBRID OUTPUT:
+April 4, 1901, is the date of Teddy Roosevelt's first Presidential Inauguration.
+
+[HYBRID heuristic score: 0.520]
+
+====================================================================================================
+EXAMPLE 51
+PROMPT:
+### Instruction:
+Write a Java program that adds two numbers and checks whether the sum is greater than 5 or not.
+
+### Input:
+int x = 3;
+int y = 4;
+
+### Response:
+
+
+REFERENCE RESPONSE:
+public class Add {
+    public static void main(String[] args) {
+        int x = 3;
+        int y = 4;
+
+        int sum = x + y;
+
+        if (sum > 5) {
+            System.out.println("Greater than 5");
+        } else {
+            System.out.println("Less than or equal to 5");
+        }
+    }
+}
+
+BASE OUTPUT:
+To add two numbers in Java, you can use the `+` operator. Here's a Java program that adds two numbers and checks whether the sum is greater than 5:
+
+```java
+import java.util.Scanner;
+
+public class Addition {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        System.out.print("Enter the first number: ");
+        int x
+
+[Base heuristic score: 0.684]
+
+HYBRID OUTPUT:
+Import java.util.Scanner;
+
+public class SumOfNumbers {
+
+    public static void main(String[] args) {
+        
+        Scanner input = new Scanner(System.in);
+        
+        System.out.print("Enter the first number: ");
+        int x = input.nextInt();
+        
+        System.out.print("Enter the second number: ");
+        int y = input.nextInt();
+        
+        int
+
+[HYBRID heuristic score: 0.572]
+
+====================================================================================================
+EXAMPLE 52
+PROMPT:
+### Instruction:
+Summarize the key components of fitness
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Fitness typically consists of four components: cardiovascular endurance, muscular strength and endurance, flexibility, and body composition. Cardiovascular endurance improves the health of the heart, lungs, and circulatory system and can be improved with activities like running, swimming, cycling, and cardio classes. Muscular strength and endurance are developed by performing activities that work against resistance, such as weight training, and improving flexibility can be achieved with stretching and yoga. Lastly, body composition is a measure of the amount of body fat relative to muscle mass, and a healthy body composition can be accomplished by reducing processed foods, engaging in regular physical activity, and maintaining a healthy lifestyle.
+
+BASE OUTPUT:
+The key components of fitness are physical activity, diet, rest, and stress management. These components work together to promote overall health and well-being. Physical activity involves engaging in regular exercise, such as running, cycling, or swimming, while diet includes eating a balanced diet that includes a variety of nutrient-rich foods. Rest is essential for maintaining energy levels and preventing muscle and joint damage. Finally, stress management involves
+
+[Base heuristic score: 0.361]
+
+HYBRID OUTPUT:
+The key components of fitness include physical activity, healthy eating habits, regular exercise, adequate sleep, stress management, and mental well-being. These components work together to improve overall health and wellness, promote physical fitness, and enhance overall quality of life. By incorporating these components into a balanced and sustainable lifestyle, individuals can achieve and maintain optimal health and wellness.
+
+[HYBRID heuristic score: 0.236]
+
+====================================================================================================
+EXAMPLE 53
+PROMPT:
+### Instruction:
+Create a class in Java to store student information such as name, age, and course.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+public class Student {
+    private String name;
+    private int age;
+    private String course;
+
+    public Student(String name, int age, String course) {
+        this.name = name;
+        this.age = age;
+        this.course = course;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+}
+
+BASE OUTPUT:
+To create a class in Java to store student information such as name, age, and course, we can follow the following steps:
+
+1. Define the class:
+
+   ```java
+   public class Student {
+       private String name;
+       private int age;
+       private String course;
+
+       public Student(String name, int age, String course) {
+           this.name = name;
+           this.age = age;
+           this.course
+
+[Base heuristic score: 0.483]
+
+HYBRID OUTPUT:
+import java.util.Scanner;
+
+public class StudentInfo {
+    private String name;
+    private int age;
+    private String course;
+
+    public StudentInfo(String name, int age, String course) {
+        this.name = name;
+        this.age = age;
+        this.course = course;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int get
+
+[HYBRID heuristic score: 0.383]
+
+====================================================================================================
+EXAMPLE 54
+PROMPT:
+### Instruction:
+Write a web scraper using Python
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+import requests
+from bs4 import BeautifulSoup
+ 
+# Function to scrape for the specified HTML elements
+def scrape(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    # Use the .find, .find_all, .select and .select_one methods to scrape website
+    titles = soup.find_all("title")
+    content = soup.find_all("p")
+    headings = soup.find_all("h1")
+    links = soup.find_all("a")
+ 
+    # Extract text from each element and store in variables
+    title = titles[0].text
+    content_p = [p.text for p in content]
+    headings_h1 = [h1.text for h1 in headings]
+    link_urls = [a.get("href") for a in links]
+ 
+    # Print out each element
+    print(title)
+    print("\n")
+    print("Content paragraphs:")
+    for paragraph in content_p:
+        print(paragraph)
+    print("\n")
+    print("Headings:")
+    for heading in headings_h1:
+        print(heading)
+    print("\n")
+    print("Links and URLs:")
+    for link in link_urls:
+        print(link)
+
+# Scrape the website below
+scrape('https://en.wikipedia.org/wiki/Python_(programming_language)')
+
+BASE OUTPUT:
+To write a web scraper using Python, follow these steps:
+
+1. Install the required libraries: First, ensure that you have the necessary libraries installed on your system. These libraries include:
+
+   - BeautifulSoup: This library is used to parse HTML and extract data from web pages.
+   - Selenium: This library is used to automate web browsers and interact with web pages.
+   - Requests: This library is used to make HTTP requests and retrieve data
+
+[Base heuristic score: 0.215]
+
+HYBRID OUTPUT:
+import requests
+from lxml import html
+
+# Define the URL of the website to scrape
+url = "https://www.example.com"
+
+# Define the HTML selector for the desired element
+element_selector = "div.product-item"
+
+# Define the HTML attributes to extract
+attributes = {"class": "product-item__image"}
+
+# Define the HTML tags to extract
+tags = ["img", "a", "h2", "
+
+[HYBRID heuristic score: 0.215]
+
+====================================================================================================
+EXAMPLE 55
+PROMPT:
+### Instruction:
+Using the given set and scores, find the maximum score.
+
+### Input:
+set = {1, 2, 3}, scores = {4, 3, 6},
+
+### Response:
+
+
+REFERENCE RESPONSE:
+# Find the maximum score
+maxScore = max(scores[i] for i in set)
+print(maxScore)
+
+BASE OUTPUT:
+The maximum score in the given set and scores is 10, which is obtained by adding the scores of the elements 1, 2, and 3. The maximum score is obtained by adding the sum of the scores of the elements 1, 2, and 3, which is 10.
+
+[Base heuristic score: 0.550]
+
+HYBRID OUTPUT:
+The maximum score in the given set and scores is 10, which is obtained by adding the scores 4, 3, and 6.
+
+[HYBRID heuristic score: 0.550]
+
+====================================================================================================
+EXAMPLE 56
+PROMPT:
+### Instruction:
+Summarize this story in 500 words or less.
+
+### Input:
+Once upon a time, there was a knight who went on a quest to slay a dragon. He gathered together a group of brave adventurers, and they set out on their journey. Along the way, they encountered all sorts of unexpected obstacles, but in the end were successful in their mission.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The knight and his adventurers encountered many challenges on their quest to slay the dragon. They had to defend themselves against wild animals, fight off bandits, and traverse treacherous terrain. Eventually, they came face to face with the dragon, but were able to defeat it. After a long and difficult journey, the knight and his companions were victorious and returned triumphantly to their homeland. Their bravery and perseverance had enabled them to complete their mission and gain fame and glory.
+
+BASE OUTPUT:
+In a lush, mystical land, a knight embarked on a perilous quest to slay a fearsome dragon. His companions were a group of brave adventurers who had gathered together to join him on his journey. Along the way, they encountered a variety of challenges, from treacherous mountains to swarms of fierce dragon-riding creatures.
+
+Despite the obstacles, the knight and his compan
+
+[Base heuristic score: 0.566]
+
+HYBRID OUTPUT:
+In a lush forest, a knight set out on a quest to slay a fearsome dragon. His companions were a group of brave adventurers who had gathered together to join him on his journey. The dragon was said to be a formidable foe, with razor-sharp claws and a fiery breath that could incinerate anything in its path.
+
+The group set out on their journey, encountering all sorts of obstacles along the
+
+[HYBRID heuristic score: 0.588]
+
+====================================================================================================
+EXAMPLE 57
+PROMPT:
+### Instruction:
+Write a list poem about summer.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Summer is for friends and fun. 
+The sun and the beach are the perfect pair.
+The breeze blows in the smell of salt and sea.
+Grilling with family under the stars at night.
+Making sandcastles by day, birds singing in the trees.
+Lemonade and ice pops to keep us cool.
+Catching fireflies and telling stories before bed.
+Writing poems in the sand and watching them wash away.
+Enjoying the moments and creating memories to last.
+
+BASE OUTPUT:
+Verse 1:
+Summer's heat, it's a force to be reckoned with
+The sun beats down on our skin, it's a blessing and a curse
+The scorching heat, it's a reminder of our mortality
+But it's also a reminder of the beauty that lies within
+
+Chorus:
+Summer's heat, it's a force to be reckoned with
+The sun be
+
+[Base heuristic score: 0.127]
+
+HYBRID OUTPUT:
+In the warm embrace of summer's breeze,
+The world comes alive with vibrant hues.
+The sun beats down on our skin,
+As we bask in its warmth and glow.
+
+The sound of laughter echoes through the air,
+As children play in the meadow's green.
+The smell of freshly cut grass fills our nose,
+As we take in the beauty of nature's sight.
+
+[HYBRID heuristic score: 0.143]
+
+====================================================================================================
+EXAMPLE 58
+PROMPT:
+### Instruction:
+Suggest a completion for the following code which will print the sum of all digits in the given number.
+
+### Input:
+num = 10121
+total = 0
+while num > 0:
+
+### Response:
+
+
+REFERENCE RESPONSE:
+num = 10121
+total = 0
+while num > 0:
+    digit = num%10
+    total += digit
+    num //= 10
+print(total)
+
+BASE OUTPUT:
+To complete the given code, you can add a loop that iterates through each digit in the number and adds it to the total variable. Here's an updated version:
+
+```python
+num = 10121
+total = 0
+
+while num > 0:
+    digit = num % 10
+    total += digit
+    num //= 10
+
+print(total)
+```
+
+This code first initializes a variable
+
+[Base heuristic score: 0.583]
+
+HYBRID OUTPUT:
+# Define a function to calculate the sum of all digits in a given number
+def sum_of_digits(num):
+    total = 0
+    while num > 0:
+        digit = num % 10
+        total += digit
+        num //= 10
+    return total
+
+# Call the function with the given number
+print(sum_of_digits(num))
+```
+
+Explanation:
+
+1.
+
+[HYBRID heuristic score: 0.667]
+
+====================================================================================================
+EXAMPLE 59
+PROMPT:
+### Instruction:
+Given the following array: show all the possible subarrays
+
+### Input:
+[1, 2, 3, 4]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Possible subarrays:
+[1], [2], [3], [4], [1, 2], [2, 3], [3, 4], [1, 2, 3], [2, 3, 4], [1, 2, 3, 4]
+
+BASE OUTPUT:
+To generate all possible subarrays of the given array, we can use a loop to iterate over each element in the array and check if it is a subarray. Here's an example implementation in Python:
+
+```python
+def generate_subarrays(arr):
+    # Initialize a list to store subarrays
+    subarrays = []
+    
+    # Loop through each element in the array
+    for I in range(len(arr)):
+
+[Base heuristic score: 0.500]
+
+HYBRID OUTPUT:
+Here's an example response to the given input array:
+
+[1, 2, 3, 4]
+[1, 2, 3, 4, 1]
+[1, 2, 3, 4, 2]
+[1, 2, 3, 4, 3]
+[1, 2, 3, 4, 4]
+[1, 2, 3,
+
+[HYBRID heuristic score: 0.583]
+
+====================================================================================================
+EXAMPLE 60
+PROMPT:
+### Instruction:
+Name 5 books that have been converted into movies.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+1. The Lord of the Rings by J.R.R. Tolkien
+2. 1984 by George Orwell
+3. Harry Potter by J. K. Rowling
+4. Gone With the Wind by Margaret Mitchell
+5. To Kill a Mockingbird by Harper Lee
+
+BASE OUTPUT:
+1. "The Lord of the Rings: The Fellowship of the Ring" (2001)
+2. "The Lord of the Rings: The Two Towers" (2002)
+3. "The Lord of the Rings: The Return of the King" (2003)
+4. "The Hunger Games" (2012)
+5. "The Maze Runner" (2014)
+
+[Base heuristic score: 0.231]
+
+HYBRID OUTPUT:
+1. "The Lord of the Rings: The Fellowship of the Ring" (2001)
+2. "The Lord of the Rings: The Two Towers" (2002)
+3. "The Lord of the Rings: The Return of the King" (2003)
+4. "The Hobbit: An Unexpected Journey" (2012)
+5. "The Hobbit: The Des
+
+[HYBRID heuristic score: 0.231]
+
+====================================================================================================
+EXAMPLE 61
+PROMPT:
+### Instruction:
+Translate the phrase "Good Morning" to French
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Bonjour
+
+BASE OUTPUT:
+"Bon Jour"
+
+[Base heuristic score: 0.000]
+
+HYBRID OUTPUT:
+Bon Jour
+
+[HYBRID heuristic score: 0.000]
+
+====================================================================================================
+EXAMPLE 62
+PROMPT:
+### Instruction:
+Describe a specific person
+
+### Input:
+Grandma
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Grandma was a kind, gentle soul. She loved being surrounded by her grandchildren and was always ready to give them a warm hug. She was an amazing cook, always making delicious meals, and was generous with her tips and tricks on how to make the perfect meal. Grandma was also an avid gardener and always had the most beautiful flowers in her garden. She was patient, wise, and full of grace.
+
+BASE OUTPUT:
+Grandma was a warm and loving woman who had a kind and compassionate heart. She was always there for her family, whether it was with a warm hug or a heartfelt conversation. Her smile could light up a room, and her laughter was infectious. She had a deep love for her grandchildren, and they would often spend hours playing with her, building forts, and playing games. Grandma was a source of strength and wisdom for her
+
+[Base heuristic score: 0.259]
+
+HYBRID OUTPUT:
+Grandma was a petite woman with a warm smile and a gentle demeanor. She had lived a long and fulfilling life, raising her family and providing for them with her hard work and dedication. Her eyes sparkled with a sense of pride and joy as she spoke about her grandchildren and great-grandchildren, who had grown up to become successful and happy individuals. She had seen the world change over the years, but her love for her family had never wavered
+
+[HYBRID heuristic score: 0.278]
+
+====================================================================================================
+EXAMPLE 63
+PROMPT:
+### Instruction:
+List five tips to keep data safe in an organization.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Five tips to keep data safe in an organization include: using strong, complex passwords; enabling two-factor authentication; encrypting confidential data; deleting or shredding obsolete or unneeded data; and implementing security protocols for data access and storage.
+
+BASE OUTPUT:
+1. Implement data encryption and access control measures to protect sensitive data.
+2. Regularly audit and review data to identify and mitigate potential security risks.
+3. Use multi-factor authentication to ensure that only authorized users can access sensitive data.
+4. Implement data backup and recovery procedures to ensure that data is always available in case of a disaster.
+5. Train employees on data security best practices and provide regular training sessions.
+6.
+
+[Base heuristic score: 0.242]
+
+HYBRID OUTPUT:
+1. Regularly update and maintain software and hardware systems.
+2. Implement strong passwords and multi-factor authentication for all user accounts.
+3. Use encryption and data backup solutions to protect sensitive data.
+4. Limit access to data to authorized personnel only.
+5. Regularly audit and review data security policies and procedures.
+6. Train employees on data security best practices and procedures.
+7. Implement a data loss prevention (DLP
+
+[HYBRID heuristic score: 0.303]
+
+====================================================================================================
+EXAMPLE 64
+PROMPT:
+### Instruction:
+Generate a new name of a local ecommerce shop.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Grotto shoppers
+
+BASE OUTPUT:
+To generate a new name for a local ecommerce shop, you can follow these steps:
+
+1. Choose a name that is unique and reflective of your business.
+2. Consider the following factors:
+   - The name should be easy to remember and pronounce.
+   - It should be memorable and catchy.
+   - It should be appropriate for your target audience.
+   - It should be consistent with your branding and visual identity.
+3.
+
+[Base heuristic score: 0.800]
+
+HYBRID OUTPUT:
+Introducing "Eco-Friendly Living" - a new local ecommerce shop that aims to promote sustainable living and reduce environmental impact. With a focus on eco-friendly products and services, we're excited to offer a wide range of eco-friendly home decor, fashion, and lifestyle items. Our mission is to empower consumers to make informed choices that benefit the environment and their well-being. We're thrilled
+
+[HYBRID heuristic score: 0.600]
+
+====================================================================================================
+EXAMPLE 65
+PROMPT:
+### Instruction:
+Edit the given C++ code to find and print the maximum number in an array of integers.
+
+### Input:
+int a[5] = {2, 3, 4, 5, 1};
+
+### Response:
+
+
+REFERENCE RESPONSE:
+int a[5] = {2, 3, 4, 5, 1};
+
+int maxNum = a[0];
+
+for(int i = 1; i < 5; i++)
+{
+ if(a[i] > maxNum)
+  maxNum = a[i];
+}
+
+// maximum number is:
+cout << maxNum << endl;
+
+BASE OUTPUT:
+To edit the given C++ code to find and print the maximum number in an array of integers, we can modify the `main()` function as follows:
+
+```c++
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    int arr[5] = {2, 3, 4, 5, 1};
+    int max_num = arr[0];
+
+    for (int
+
+[Base heuristic score: 0.774]
+
+HYBRID OUTPUT:
+#include <iostream>
+using namespace std;
+
+int main() {
+    int arr[5], max_num = 0;
+    for (int I = 0; I < 5; i++) {
+        cin >> arr[i];
+        if (arr[i] > max_num) {
+            max_num = arr[i];
+        }
+    }
+    cout << "The maximum number in the array is: "
+
+[HYBRID heuristic score: 0.419]
+
+====================================================================================================
+EXAMPLE 66
+PROMPT:
+### Instruction:
+Choose the synonyms for the words provided in the input.
+
+### Input:
+Dynamic, Fervor
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Dynamic - Vigorous, Energetic; Fervor - Ardor, Zeal.
+
+BASE OUTPUT:
+Synonyms for the words provided in the input:
+
+Dynamic: Energetic, Vigorous, Active, Intense, Fresh, Exciting, Dynamic, Frenetic, Frenzied, Frenzied, Frenzied, Frenzied, Frenzied, Frenzied, Frenzied, Frenzied, Frenzied, Frenzied, Frenzied, Frenz
+
+[Base heuristic score: 0.714]
+
+HYBRID OUTPUT:
+1. Energized
+2. Frenzied
+3. Intense
+4. Passionate
+5. Vibrant
+6. Vigorous
+7. Vital
+8. Vivacious
+9. Vivacious
+10. Vivacious
+11. Vivacious
+12. Vivacious
+13. Vivacious
+14. Vivacious
+15. Vivacious
+16. V
+
+[HYBRID heuristic score: 0.071]
+
+====================================================================================================
+EXAMPLE 67
+PROMPT:
+### Instruction:
+Classify if the following example refers to a Trumpet, Saxophone or Clarinet
+
+### Input:
+Brass Wind Instrument
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Trumpet
+
+BASE OUTPUT:
+Yes, the given example refers to a Trumpet, Saxophone or Clarinet. The instrument is a brass wind instrument that produces sound through the vibration of the air. Trumpets, saxophones, and clarinets are all examples of brass wind instruments.
+
+[Base heuristic score: 0.800]
+
+HYBRID OUTPUT:
+Yes, the given example refers to a Trumpet, Saxophone or Clarinet.
+
+[HYBRID heuristic score: 0.600]
+
+====================================================================================================
+EXAMPLE 68
+PROMPT:
+### Instruction:
+Take this equation and solve it for x.
+
+### Input:
+5x + 7 = 57
+
+### Response:
+
+
+REFERENCE RESPONSE:
+x = (57 - 7) / 5 = 10
+
+BASE OUTPUT:
+To solve the equation 5x + 7 = 57, we can use the quadratic formula:
+
+x = (-b ± sqrt(b^2 - 4ac)) / 2a
+
+In this case, the quadratic formula gives us:
+
+x = (-2.5 + sqrt(25 - 40)) / 2 = -1.5
+
+Therefore, the value of x is -1.5.
+
+[Base heuristic score: 0.615]
+
+HYBRID OUTPUT:
+Solving the equation for x using the given input values, we get:
+
+x = 10
+
+Therefore, the value of x is 10.
+
+[HYBRID heuristic score: 0.308]
+
+====================================================================================================
+EXAMPLE 69
+PROMPT:
+### Instruction:
+Describe the taste of Italian food.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Italian food has a robust and flavorful taste. It is usually rich in garlic, herbs and spices, with accompaniments of varied tomatoes and cheeses. The flavor combinations of ingredients such as olives, capers and sun-dried tomatoes are often used for adding complexity to Italian dishes. The rich sauces and vibrant flavors of Italian cooking provide an unforgettable dining experience.
+
+BASE OUTPUT:
+The taste of Italian food is a complex and delicious blend of flavors that can be enjoyed in many different ways. From the rich and savory tomato sauces to the crispy and salty pizza crust, Italian cuisine is known for its bold and bold flavors.
+
+One of the most iconic Italian dishes is pasta. From spaghetti and meatballs to rigatoni and baked ziti, pasta is a st
+
+[Base heuristic score: 0.300]
+
+HYBRID OUTPUT:
+The taste of Italian food is a complex and delicious blend of flavors that is both familiar and exotic. From the rich and creamy tomato sauce to the crisp and tangy mozzarella cheese, every bite is a sensory experience. The aroma of fresh basil and garlic wafts through the air, while the aroma of roasted garlic and olive oil fills the kitchen. The taste of freshly gr
+
+[HYBRID heuristic score: 0.260]
+
+====================================================================================================
+EXAMPLE 70
+PROMPT:
+### Instruction:
+Describe the color and texture of a dapple gray horse.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+A dapple gray horse has a coat that is characterized by silver and black patches. The coat has a shimmery, metallic sheen in the light, and is exceptionally soft and smooth to the touch. The markings are often irregular in shape and vary from horse to horse.
+
+BASE OUTPUT:
+The color of a dapple gray horse is a shade of gray with a reddish tint. The texture of a dapple gray horse is smooth and silky, with a soft, velvety feel. The hair on the horse's coat is short and dense, with a blend of gray and white hairs. The color of the dapple gray horse's coat can range from a light gray to a darker shade of gray, with a blend of
+
+[Base heuristic score: 0.444]
+
+HYBRID OUTPUT:
+The dapple gray horse is a striking and unique breed that is known for its striking coloring. Its coat is a deep, rich shade of gray, with a hint of brown or blue-gray that runs through it. The coloring is often described as a "dappled" effect, with patches of light and dark gray that create a unique and intricate pattern.
+
+The texture of the coat is soft and silky, with a slight sheen that adds to
+
+[HYBRID heuristic score: 0.472]
+
+====================================================================================================
+EXAMPLE 71
+PROMPT:
+### Instruction:
+Create a variable to store the result of 2 + 5
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+result = 7
+
+BASE OUTPUT:
+To create a variable to store the result of 2 + 5, you can use the `+` operator and assign the result to the variable. Here's an example:
+
+```python
+# Example code
+result = 2 + 5
+print(result)  # Output: 7
+```
+
+In this example, the variable `result` is assigned the value 7 after adding 2 and 5 using the `+` operator.
+
+[Base heuristic score: 1.000]
+
+HYBRID OUTPUT:
+Here's an example Python program that calculates the result of 2 + 5:
+
+```python
+# Define a variable to store the result
+result = 2 + 5
+
+# Print the result
+print(f"The result of 2 + 5 is: {result}")
+```
+
+This program first defines a variable called `result` to store the result of 2 + 5. It then prints the result using the `f"..."
+
+[HYBRID heuristic score: 0.818]
+
+====================================================================================================
+EXAMPLE 72
+PROMPT:
+### Instruction:
+Create a story involving a talking mouse and an elephant.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Once upon a time, there was a talking mouse who lived in the forest near an elephant sanctuary. The mouse was very curious about the elephants and would talk to them every day. One day, the mouse asked the elephant, “Why are you so big and strong?” The elephant chuckled and said, “I'm big and strong because I'm brave enough to explore and try new things.” The mouse thought about this for a while and decided to be brave and explore too. From then on, the mouse and the elephant were the best of friends.
+
+BASE OUTPUT:
+Once upon a time, there was a talking mouse named Max who lived in a small apartment in the city. Max was a curious and adventurous mouse who loved to explore the city and its many wonders. One day, while wandering through the streets, Max stumbled upon an elephant named Sally.
+
+Max was fascinated by Sally's massive size and majestic presence. He couldn't help but wonder what it would be like to talk to
+
+[Base heuristic score: 0.375]
+
+HYBRID OUTPUT:
+Once upon a time, there was a talking mouse named Max who lived in a small apartment in the city. Max was a curious and adventurous mouse who loved to explore the city and its many wonders. One day, while wandering through the streets, Max stumbled upon an elephant named Sally.
+
+Sally was a wise and kind elephant who had lived in the city for many years. Max was fascinated by Sally's wisdom and
+
+[HYBRID heuristic score: 0.344]
+
+====================================================================================================
+EXAMPLE 73
+PROMPT:
+### Instruction:
+Create a Python class for a movie instance with name, director, and year fields.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+class Movie:
+    def __init__(self, name, director, year):
+        self.name = name
+        self.director = director
+        self.year = year
+
+BASE OUTPUT:
+To create a Python class for a movie instance with name, director, and year fields, we can follow the following steps:
+
+1. Define the class:
+
+   ```python
+   class Movie:
+       def __init__(self, name, director, year):
+           self.name = name
+           self.director = director
+           self.year = year
+       def get_name(self):
+           return self.name
+       def get_direct
+
+[Base heuristic score: 1.000]
+
+HYBRID OUTPUT:
+Class Movie:
+  def __init__(self, name, director, year):
+    self.name = name
+    self.director = director
+    self.year = year
+
+  def get_name(self):
+    return self.name
+
+  def get_director(self):
+    return self.director
+
+  def get_year(self):
+    return self.year
+
+# Example usage
+movie1 = Movie("
+
+[HYBRID heuristic score: 0.850]
+
+====================================================================================================
+EXAMPLE 74
+PROMPT:
+### Instruction:
+Create a salacious gossip headline.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Celebrity Breakup Scandal: It's Not What You Think!
+
+BASE OUTPUT:
+"Exclusive: Ex-GF of K-Pop Star Reveals Shocking Secrets About His Private Life!"
+
+[Base heuristic score: 0.000]
+
+HYBRID OUTPUT:
+"Exclusive: Ex-GF of K-Pop Star Reveals Shocking Secrets About His Private Life!"
+
+[HYBRID heuristic score: 0.000]
+
+====================================================================================================
+EXAMPLE 75
+PROMPT:
+### Instruction:
+Write two sentences about the significance of human rights education
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Human Rights Education is important for creating a culture of respect for human rights and helping people to live with dignity. It can also empower individuals to become critical thinkers and help them to develop the capacity to make informed decisions.
+
+BASE OUTPUT:
+Human rights education is significant because it promotes the understanding and protection of human rights, which is essential for a fair and just society. By educating individuals about their rights and responsibilities, we can create a culture of respect and dignity for all members of society. This education helps to prevent human rights abuses and promotes peace and stability in communities. It also helps to build a more equitable and just world for all.
+
+[Base heuristic score: 0.462]
+
+HYBRID OUTPUT:
+Human rights education is a crucial aspect of promoting and protecting human rights worldwide. It is a critical component of a comprehensive and holistic approach to social justice and equity, as it provides individuals with the knowledge, skills, and values necessary to recognize and challenge injustices, promote social and economic equality, and protect fundamental human rights. Human rights education helps to build a culture of respect, dignity, and equality, which is essential for promoting peace, stability,
+
+[HYBRID heuristic score: 0.436]
+
+====================================================================================================
+EXAMPLE 76
+PROMPT:
+### Instruction:
+Research the origin of the Rubik's cube and summarize your findings
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The Rubik's Cube was invented in 1974 by Ernö Rubik, a Hungarian professor and sculptor. His goal was to create a three-dimensional puzzle that would illustrate three-dimensional geometry. He originally called the puzzle the 'Magic Cube', but it was later changed to the Rubik's cube. The cube was first introduced to the public in 1980 and quickly became a worldwide phenomenon. It is now considered to be the world's best selling intellectual toy.
+
+BASE OUTPUT:
+To research the origin of the Rubik's cube, you can start by reading articles and books on the subject. Some popular sources include "The Rubik's Cube: The Story of a Mind-Bending Game" by David Kelley, "The Rubik's Cube: The Story of a Mind-Bending Game" by David Kelley, and "The Rubik's Cube: The Story of a Mind-Bending Game" by David
+
+[Base heuristic score: 0.193]
+
+HYBRID OUTPUT:
+The Rubik's cube is a popular puzzle that has captivated the world since its inception in 1974. The origins of the Rubik's cube are shrouded in mystery, but it is believed to have been invented by Hungarian engineer Ernő Rubik in 1974. Rubik's cube is a 3x3x3 cube that can be rotated and rearranged to reveal a unique pattern.
+
+[HYBRID heuristic score: 0.368]
+
+====================================================================================================
+EXAMPLE 77
+PROMPT:
+### Instruction:
+Generate a captivating trailer for the following movie
+
+### Input:
+The film follows the life of a struggling young actress. It explores her difficulties in pursuing her dreams while facing personal and professional challenges.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Welcome to a world where dreams and reality collide. Follow the journey of a young actress as she chases her passion and navigates through her personal and professional struggles. Will she succeed or will her dreams be crushed? Watch to find out.
+
+BASE OUTPUT:
+[Opening shot of a young woman, Lily, standing on a stage, her face filled with determination and passion]
+
+[Cut to a close-up of her face, as she speaks into the microphone]
+
+Lily: "I've always dreamed of being an actress. I've been working hard to achieve my goal, but life has been throwing me curveballs left and right. I've been rejected by casting directors,
+
+[Base heuristic score: 0.235]
+
+HYBRID OUTPUT:
+[Opening shot of a young woman, Lily, standing on a busy street corner, her face painted in a bold red lipstick]
+
+Narrator: Lily's life is a rollercoaster ride of highs and lows. She's just starting out as a struggling actress, but her dreams are bigger than her small town.
+
+[Cut to a montage of Lily's struggles, including rejection letters, aud
+
+[HYBRID heuristic score: 0.294]
+
+====================================================================================================
+EXAMPLE 78
+PROMPT:
+### Instruction:
+Design a survey that prioritizes customer feedback.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+This short survey is designed to help us prioritize customer feedback. Please provide your rating on a scale of 0-10 (with 0 being poorest and 10 being the best) for each of the following measures of your shopping experience:
+
+- Product quality: 
+- Variety of products:
+- Ease of use of the website/mobile app:
+- Delivery speed:
+- Customer service:
+- Overall satisfaction:
+
+BASE OUTPUT:
+1. What is your primary reason for using our product/service?
+a. To solve a problem
+b. To achieve a specific goal
+c. To get a better experience
+d. Other (please specify)
+
+2. How satisfied are you with our product/service?
+a. Very satisfied
+b. Satisfied
+c. Neutral
+d. Unsatisfied
+e. Very unsatisfied
+
+3. How likely are you to
+
+[Base heuristic score: 0.200]
+
+HYBRID OUTPUT:
+1. How often do you visit our website or app? (Select all that apply)
+   a) Daily
+   b) Weekly
+   c) Monthly
+   d) Rarely
+   e) Never
+
+2. How satisfied are you with our website or app? (Select one)
+   a) Very satisfied
+   b) Satisfied
+   c) Neutral
+   d) Unsatisfied
+   e) Very unsatisf
+
+[HYBRID heuristic score: 0.100]
+
+====================================================================================================
+EXAMPLE 79
+PROMPT:
+### Instruction:
+Generate a list of emotions experienced by the protagonist in the following story.
+
+### Input:
+The protagonist of the story had just gotten news of her father's death.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The protagonist experienced a range of emotions including sadness, grief, shock, heartbreak, confusion, anger, despair, and numbness.
+
+BASE OUTPUT:
+Here's a possible response to the given input:
+
+- Sadness
+- Anger
+- Disappointment
+- Grief
+- Loneliness
+- Fear
+- Guilt
+- Relief
+- Joy
+- Confusion
+- Surprise
+- Disbelief
+- Embarrassment
+- Disgust
+- Disappointment
+- Sadness
+- Anger
+- Disappointment
+- Grief
+-
+
+[Base heuristic score: 0.226]
+
+HYBRID OUTPUT:
+1. Sadness
+The protagonist felt a deep sense of sadness as she heard the news of her father's passing. She felt a pang of grief and loss, as if her world had been shattered.
+
+2. Anger
+The protagonist's anger was palpable as she realized that her father had been neglecting her and her siblings. She felt betrayed and hurt, and her anger was fueled by the knowledge that her father
+
+[HYBRID heuristic score: 0.452]
+
+====================================================================================================
+EXAMPLE 80
+PROMPT:
+### Instruction:
+Using the given input, identify the language it is written in.
+
+### Input:
+Mon cheval est blanc
+
+### Response:
+
+
+REFERENCE RESPONSE:
+French
+
+BASE OUTPUT:
+The given input "Mon cheval est blanc" is written in French.
+
+[Base heuristic score: 0.733]
+
+HYBRID OUTPUT:
+The given input text "Mon cheval est blanc" is written in French.
+
+[HYBRID heuristic score: 0.733]
+
+====================================================================================================
+EXAMPLE 81
+PROMPT:
+### Instruction:
+Edit this sentence to make it more concise: "A computer stores and retrieves digital data."
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+A computer stores and retrieves data digitally.
+
+BASE OUTPUT:
+To make this sentence more concise, we can remove the word "digital" from the sentence. The original sentence reads: "A computer stores and retrieves digital data."
+
+[Base heuristic score: 0.244]
+
+HYBRID OUTPUT:
+A computer stores and retrieves digital data using electronic storage devices, such as hard drives, flash drives, and cloud storage services.
+
+[HYBRID heuristic score: 0.131]
+
+====================================================================================================
+EXAMPLE 82
+PROMPT:
+### Instruction:
+Edit the following while loop to fix the error.
+
+### Input:
+i = 0
+while i <= 5:
+    print(i)   
+    i =  i + 1
+
+### Response:
+
+
+REFERENCE RESPONSE:
+i = 0
+while i < 5:
+    print(i)    
+    i =  i + 1
+
+BASE OUTPUT:
+To fix the error in the while loop, you need to update the condition of the loop to check if the value of i is less than or equal to 5. Here's the updated code:
+
+```python
+i = 0
+while i <= 5:
+    print(i)   
+    i = i + 1
+```
+
+This will ensure that the loop will only execute once the value of i is less than or equal to 5.
+
+[Base heuristic score: 0.846]
+
+HYBRID OUTPUT:
+Updated while loop:
+
+while I <= 5:
+    print(i)
+    I = I + 1
+
+This fixes the error caused by the variable I being assigned a value outside of the loop.
+
+[HYBRID heuristic score: 0.615]
+
+====================================================================================================
+EXAMPLE 83
+PROMPT:
+### Instruction:
+When would you use a while-loop in Python?
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+A while-loop in Python is used when we need to iterate through a set of instructions or code block until a condition is met or false. It allows us to perform an operation multiple times until the condition is met. For example, we can use a while-loop to iterate and check if a certain number is prime or not.
+
+BASE OUTPUT:
+In Python, a while-loop is used to execute a block of code repeatedly until a specific condition is met. Here are some examples:
+
+1. While loop to count up to a specific number:
+
+```python
+n = int(input("Enter a number: "))
+while n > 0:
+    print(n)
+    n = n // 10
+```
+
+2. While loop to count down to a specific number:
+
+```
+
+[Base heuristic score: 0.333]
+
+HYBRID OUTPUT:
+In Python, a while-loop is used to execute a block of code repeatedly until a specified condition is met. Here's an example:
+
+```python
+while True:
+    # Code to execute while loop
+    # ...
+
+    # Code to execute after loop
+    # ...
+
+    break
+```
+
+In this example, the while loop will execute continuously until a break statement is executed. If the condition is met, the loop will break out of
+
+[HYBRID heuristic score: 0.400]
+
+====================================================================================================
+EXAMPLE 84
+PROMPT:
+### Instruction:
+Determine the area of a regular pentagon with a side length of 10 cm.
+
+### Input:
+10 cm
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The area of a regular pentagon with a side length of 10 cm is 247.26 square centimeters.
+
+BASE OUTPUT:
+The area of a regular pentagon with a side length of 10 cm is 100 square units.
+
+[Base heuristic score: 0.765]
+
+HYBRID OUTPUT:
+The area of a regular pentagon with a side length of 10 cm is 100 square units.
+
+[HYBRID heuristic score: 0.765]
+
+====================================================================================================
+EXAMPLE 85
+PROMPT:
+### Instruction:
+Determine how the given two words are related.
+
+### Input:
+Clothing and Fabric
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Clothing is made from fabric.
+
+BASE OUTPUT:
+The given two words, "Clothing" and "Fabric," are related because they both refer to the material used to make clothing. Clothing refers to the outerwear, such as jackets, coats, and shirts, while fabric refers to the material used to make clothing, such as cotton, linen, and silk. These two words are used interchangeably in everyday language and are often used together in sentences. For example, "
+
+[Base heuristic score: 0.643]
+
+HYBRID OUTPUT:
+The given two words, "Clothing" and "Fabric," are related because they both refer to the material used to make clothing. Clothing refers to the outerwear, such as jackets, coats, and shirts, while fabric refers to the material used to make clothing, such as cotton, linen, and silk. These materials are used to create different types of clothing, such as dresses, suits, and pants,
+
+[HYBRID heuristic score: 0.643]
+
+====================================================================================================
+EXAMPLE 86
+PROMPT:
+### Instruction:
+Suggest an appropriate quote for a given topic.
+
+### Input:
+Friendship
+
+### Response:
+
+
+REFERENCE RESPONSE:
+"A real friend is one who walks in when the rest of the world walks out" - Walter Winchell
+
+BASE OUTPUT:
+"Friendship is the greatest gift in life, for it brings us together and unites us in a way that nothing else can." - Unknown
+
+This quote perfectly captures the essence of friendship and its significance in our lives. It reminds us of the importance of having a support system and the joy that comes with being surrounded by people who share our values and goals. It also emphasizes the importance of cherishing and nurturing our relationships with friends, as they are
+
+[Base heuristic score: 0.375]
+
+HYBRID OUTPUT:
+"Friendship is the greatest gift in life, for it brings us together, and unites us in a way that nothing else can. It is a bond that transcends time and space, and is a constant source of inspiration and joy. May your friendship always be strong, and may you always find comfort in the knowledge that you have someone to share your joys and sorrows with."
+
+[HYBRID heuristic score: 0.292]
+
+====================================================================================================
+EXAMPLE 87
+PROMPT:
+### Instruction:
+Generate a sample press release about the launch of a new product.
+
+### Input:
+<noinput>.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Today, XYZ Company is proud to announce the launch of its new product, which is a revolutionary solution to a long standing problem. XYZ Company's new product has been designed around the latest advancements in technology, while still being simple and intuitive to use. Our product is an affordable solution which offers unparalleled flexibility and convenience. With XYZ Company's new product, users can save time, money, and effort, while still getting all the features they need. We are confident that it will revolutionize how businesses operate and how consumers interact with products.
+
+BASE OUTPUT:
+[Headline: "New Product Launch: Revolutionary Technology for Efficient and Sustainable Energy Management"]
+
+[Subheadline: "Introducing the Next-Generation Energy Management System: A Game-Changer for Businesses and Individuals"]
+
+[Body:
+The energy industry is undergoing a significant transformation, with the rise of renewable energy sources and the need for more sustainable and efficient energy management. To address these challenges,
+
+[Base heuristic score: 0.189]
+
+HYBRID OUTPUT:
+FOR IMMEDIATE RELEASE
+
+[Company Name] Launches Revolutionary New Product: [Product Name]
+
+[City, State] - [Date], [Company Name] is proud to announce the launch of its latest product, [Product Name]. This innovative new product is designed to revolutionize the way people live, work, and play.
+
+[Product Name] is a state-of-the-art gadget that offers a range of features
+
+[HYBRID heuristic score: 0.284]
+
+====================================================================================================
+EXAMPLE 88
+PROMPT:
+### Instruction:
+Implement a function in Python that sorts a list in ascending order using Bubble Sort algorithm.
+
+### Input:
+my_list = [4, 6, 3, 9, 1]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+def bubble_sort(list):
+    for i in range(len(list)):
+        for j in range(i+1, len(list)):
+            if list[i] > list[j]:
+                list[i], list[j] = list[j], list[i]
+    return list
+
+my_list = [4, 6, 3, 9, 1]
+print(bubble_sort(my_list))
+
+BASE OUTPUT:
+To implement the Bubble Sort algorithm in Python, we can use the built-in `sorted()` function. Here's an example:
+
+```python
+def bubble_sort(my_list):
+    """
+    Sorts a list in ascending order using Bubble Sort algorithm.
+    """
+    n = len(my_list)
+    for I in range(n):
+        for j in range(n - I - 1):
+
+[Base heuristic score: 0.724]
+
+HYBRID OUTPUT:
+# Function to sort a list in ascending order using Bubble Sort algorithm
+def bubble_sort(my_list):
+    n = len(my_list)
+    for I in range(n):
+        for j in range(n-i-1):
+            if my_list[j] > my_list[j+1]:
+                temp = my_list[j]
+                my_list[j] = my_list[j
+
+[HYBRID heuristic score: 0.655]
+
+====================================================================================================
+EXAMPLE 89
+PROMPT:
+### Instruction:
+Explain the process of neural network training.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Neural network training is a process which involves using an algorithm to iteratively and incrementally modify the weights of the connections between neurons in the network. This is done in order to reduce the error between the model’s predictions and the desired output. The algorithm adjusts the weights of the connections based on how the network performed on a particular data set, and the error is measured based on a loss function. The process of modifying the weights is repeated until the model achieves the desired accuracy.
+
+BASE OUTPUT:
+In neural network training, the process involves iteratively updating the weights and biases of the neural network to optimize its performance on a given task. Here's a step-by-step explanation of the process:
+
+1. Collect data: The first step is to collect data from the training set. This data is used to train the neural network to learn the patterns and relationships in the data.
+
+2. Define the neural network: The next step is to define the structure of the
+
+[Base heuristic score: 0.380]
+
+HYBRID OUTPUT:
+Neural network training involves the process of optimizing the weights and biases of a neural network to achieve optimal performance on a given task. The process typically involves several steps, including:
+
+1. Data Preprocessing: The first step is to preprocess the data by normalizing it, scaling it, and converting it to a format that the neural network can understand. This step is essential to ensure that the neural network can learn from the data accurately.
+
+2. Model Architecture:
+
+[HYBRID heuristic score: 0.320]
+
+====================================================================================================
+EXAMPLE 90
+PROMPT:
+### Instruction:
+Generate a unique username, containing 8 - 10 characters, made of both numbers and letters.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+U5a6m7Q2
+
+BASE OUTPUT:
+Here's an example response:
+
+Input:
+Enter your name: John
+Enter your email address: john.doe@example.com
+Enter your password:
+Enter your confirmation password:
+Your username is: johndoe123
+
+Note: The username generated is johndoe123, which is a unique combination of numbers and letters.
+
+[Base heuristic score: 0.467]
+
+HYBRID OUTPUT:
+Here's a Python script that generates a unique username containing 8 - 10 characters, made of both numbers and letters:
+
+```python
+import random
+
+def generate_username():
+    # Generate a random string of 8-10 characters
+    characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXY
+
+[HYBRID heuristic score: 0.933]
+
+====================================================================================================
+EXAMPLE 91
+PROMPT:
+### Instruction:
+Summarize an article about the importance of being eco-friendly in one sentence.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Reducing consumption of resources and increasing respect and regard for our environment can ensure a healthy, sustainable future for all.
+
+BASE OUTPUT:
+The article emphasizes the importance of being eco-friendly by highlighting the negative impacts of non-sustainable practices on the environment and the benefits of adopting eco-friendly habits. It encourages readers to make small changes in their daily lives to reduce their carbon footprint and contribute to a more sustainable future.
+
+[Base heuristic score: 0.433]
+
+HYBRID OUTPUT:
+Being eco-friendly is crucial for preserving the environment and promoting sustainable living practices. The article discusses the benefits of reducing waste, conserving energy, and using environmentally friendly products. It emphasizes the importance of reducing carbon footprint, minimizing pollution, and promoting a greener future for future generations.
+
+[HYBRID heuristic score: 0.467]
+
+====================================================================================================
+EXAMPLE 92
+PROMPT:
+### Instruction:
+Modify a given program to replace each element in an array with the sum of all elements before it.
+
+### Input:
+[1,2,3,4]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+def pref_sum(a):
+    output = [a[0]]
+    for i in range(1, len(a)):
+        output.append(a[i] + output[i-1])
+    return output
+
+BASE OUTPUT:
+To modify the given program to replace each element in an array with the sum of all elements before it, we can modify the `sum_array` function to return the sum of all elements before the current element. Here's the modified program:
+
+```python
+def sum_array(arr):
+    sum = 0
+    for I in range(len(arr)):
+        sum += arr[i]
+    return sum
+
+# Example usage
+arr = [
+
+[Base heuristic score: 0.758]
+
+HYBRID OUTPUT:
+#include <iostream>
+using namespace std;
+
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5};
+    int sum = 0;
+    
+    for (int I = 0; I < 5; i++) {
+        sum += arr[i];
+    }
+    
+    for (int I = 0; I < 5; i++) {
+
+[HYBRID heuristic score: 0.242]
+
+====================================================================================================
+EXAMPLE 93
+PROMPT:
+### Instruction:
+Explain the four main steps of organic chemistry.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+The four main steps of organic chemistry are isolation, reaction, purification, and characterization. Isolation involves extracting and separating compounds from their natural sources. Reaction refers to the transformation of compounds via chemical or biochemical processes. Purification refers to separating the desired product from any impurities or by-products of the reaction process. Characterization involves determining the structure, purity and identity of the product.
+
+BASE OUTPUT:
+Sure! Here's an explanation of the four main steps of organic chemistry:
+
+1. Molecular Structure: This step involves breaking down the molecule into its component atoms and ions, which are then arranged in a specific order to form a molecule. This step is essential for understanding the chemical properties of organic molecules.
+
+2. Bonding: This step involves determining the types of bonds that exist between the atoms in the
+
+[Base heuristic score: 0.341]
+
+HYBRID OUTPUT:
+In organic chemistry, there are four main steps that are followed to understand the structure and properties of organic molecules. These steps are:
+
+1. Molecular Structure: This step involves breaking down the molecule into its constituent atoms and ions, and identifying the number and type of atoms present. This step is essential for understanding the chemical properties of the molecule.
+
+2. Bonding: This step involves identifying the types of b
+
+[HYBRID heuristic score: 0.317]
+
+====================================================================================================
+EXAMPLE 94
+PROMPT:
+### Instruction:
+Tag the language of the following text
+
+### Input:
+Kareena always had a passion for art. She wanted to pursue a career in the creative field and start her own gallery one day.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+English
+
+BASE OUTPUT:
+The language of the given text is English.
+
+[Base heuristic score: 0.172]
+
+HYBRID OUTPUT:
+Bahasa Indonesia: Tidak ada kata lengkap, tetapi kata "art" di atas adalah "karya". Karya Kareena adalah pasangan kata "karya" dan "art". Karya Kareena menjadi pasangan kata "art" dan "galeri" sebagai kata kunci.
+
+[HYBRID heuristic score: 0.069]
+
+====================================================================================================
+EXAMPLE 95
+PROMPT:
+### Instruction:
+Paraphrase the sentence following a different rhetorical pattern.
+
+### Input:
+The farmer walked through his farm.
+
+### Response:
+
+
+REFERENCE RESPONSE:
+Taking a leisurely stroll, the farmer surveyed his farm.
+
+BASE OUTPUT:
+The farmer walked through his farm, as if it were a peaceful and serene place.
+
+[Base heuristic score: 0.412]
+
+HYBRID OUTPUT:
+The farmer made his way through his farm.
+
+[HYBRID heuristic score: 0.294]
+
+====================================================================================================
+EXAMPLE 96
+PROMPT:
+### Instruction:
+Write a function that takes an array of integers and returns the minimum difference between two consecutive elements.
+
+### Input:
+arr = [4, 2, 7, 5, 1]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+def min_difference(arr):
+  min_diff = abs(arr[1] - arr[0])
+  for i in range(1, len(arr)-1):
+    diff = abs(arr[i+1] - arr[i])
+    if diff < min_diff:
+      min_diff = diff
+  return min_diff
+
+BASE OUTPUT:
+Here's a Python function that takes an array of integers and returns the minimum difference between two consecutive elements:
+
+```python
+def find_min_diff(arr):
+    # Initialize minimum difference to largest difference
+    min_diff = arr[0]
+    
+    # Loop through the array
+    for I in range(1, len(arr)):
+        # If the current element is smaller than the previous one, update minimum difference
+        if arr[i
+
+[Base heuristic score: 0.806]
+
+HYBRID OUTPUT:
+Def minimum_diff(arr):
+    # Initialize minimum difference to largest difference
+    min_diff = arr[0]
+    
+    # Loop through the array
+    for I in range(1, len(arr)):
+        # Find the difference between the current and previous elements
+        diff = arr[i] - arr[i-1]
+        
+        # If the difference is smaller than the current minimum, update the minimum difference
+        if diff < min
+
+[HYBRID heuristic score: 0.528]
+
+====================================================================================================
+EXAMPLE 97
+PROMPT:
+### Instruction:
+Create a loop that prints out numbers from 0 to 15, except skip numbers 6, 7, and 12.
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+for num in range(16):
+ if num not in [6, 7, 12]:
+    print(num)
+
+BASE OUTPUT:
+To create a loop that prints out numbers from 0 to 15, except skipping numbers 6, 7, and 12, you can use the following code:
+
+```python
+# Define a variable to store the current number
+current_number = 0
+
+# Define a loop to print out numbers from 0 to 15
+for I in range(6, 16, 2):
+    # Check if the current number is
+
+[Base heuristic score: 0.880]
+
+HYBRID OUTPUT:
+```python
+# Define a variable to store the loop counter
+counter = 0
+
+# Define a loop to print numbers from 0 to 15, except skip numbers 6, 7, and 12
+while counter <= 15:
+    # Print the current number
+    print(f"{counter} ")
+    
+    # Increment the loop counter
+    counter += 1
+```
+
+Output:
+```
+0
+1
+
+[HYBRID heuristic score: 0.560]
+
+====================================================================================================
+EXAMPLE 98
+PROMPT:
+### Instruction:
+Which type of communication tool is likely to be used in a remote working environment?
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+In a remote working environment, tools such as video conferencing, messaging apps, and online document collaboration are likely to be used for communication.
+
+BASE OUTPUT:
+The type of communication tool that is likely to be used in a remote working environment is video conferencing software such as Zoom, Skype, or Google Meet. These tools allow for real-time communication, video and audio streaming, and the ability to share screens and documents. They are highly effective in facilitating remote work and collaboration, as they allow for seamless communication and collaboration between team members regardless of their physical location.
+
+[Base heuristic score: 0.821]
+
+HYBRID OUTPUT:
+The type of communication tool that is likely to be used in a remote working environment is video conferencing software such as Zoom, Skype, or Google Meet. These platforms offer real-time video and audio communication, making it easy for team members to collaborate and communicate effectively even when they are physically separated. Video conferencing software also allows for easy sharing of documents, presentations, and other files, making it a valuable tool for remote teams. Additionally, video conferencing software provides
+
+[HYBRID heuristic score: 0.750]
+
+====================================================================================================
+EXAMPLE 99
+PROMPT:
+### Instruction:
+Tell me a synonym of the word “strident”
+
+### Input:
+
+
+### Response:
+
+
+REFERENCE RESPONSE:
+A synonym of the word “strident” is shrill.
+
+BASE OUTPUT:
+Sure, here are some synonyms for the word "strident":
+
+1. Impetuous
+2. Impetuous
+3. Impetuous
+4. Impetuous
+5. Impetuous
+6. Impetuous
+7. Impetuous
+8. Impetuous
+9. Impetuous
+10. Impetuous
+11. Impetuous
+12. Impetuous
+13. Impetuous
+
+[Base heuristic score: 0.300]
+
+HYBRID OUTPUT:
+Synonyms for "strident":
+1. Impetuous
+2. Impetuous and uncontrolled
+3. Emphatic
+4. Emphatic and forceful
+5. Emphatic and unyielding
+6. Emphatic and unrelenting
+7. Emphatic and uncompromising
+8. Emphatic and unapologetic
+9. Emphatic and unrelenting
+10. Emph
+
+[HYBRID heuristic score: 0.100]
+
+====================================================================================================
+EXAMPLE 100
+PROMPT:
+### Instruction:
+Rearrange the following list of numbers in an ascending order.
+
+### Input:
+[9, 5, 8, 2, 4]
+
+### Response:
+
+
+REFERENCE RESPONSE:
+[2, 4, 5, 8, 9]
+
+BASE OUTPUT:
+To rearrange the list of numbers in an ascending order, we can use the `sort()` function with the `reverse=True` parameter. Here's the modified code:
+
+```python
+numbers = [9, 5, 8, 2, 4]
+sorted_numbers = sorted(numbers, reverse=True)
+print(sorted_numbers)
+```
+
+Output:
+```
+[2, 4, 5, 8,
+
+[Base heuristic score: 0.933]
+
+HYBRID OUTPUT:
+[2, 4, 5, 9, 8]
+
+[HYBRID heuristic score: 0.333]
+
+====================================================================================================
+SUMMARY
+Total examples evaluated: 100
+Base   avg heuristic score (all examples): 0.539
+Hybrid avg heuristic score (all examples): 0.445
+Examples with specialized rules applied to both models: 18
+Base   avg heuristic score (special-rule subset): 0.665
+Hybrid avg heuristic score (special-rule subset): 0.574
