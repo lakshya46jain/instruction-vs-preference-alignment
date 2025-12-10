@@ -1,3 +1,21 @@
+# -------------------------------------------------------------
+# hybrid_eval.py
+# -------------------------------------------------------------
+# Purpose:
+#   - Evaluate the HYBRID (SFT + DPO merged) model against the base model
+#   - Generate responses from both models across a validation dataset
+#   - Score each model's output using heuristic instruction-following metrics
+#   - Produce detailed per-example logs and summary statistics
+#
+# Notes:
+#   - This script performs *evaluation only*. No training occurs here.
+#   - The HYBRID adapter directory may contain keys not supported by PEFT;
+#     prepare_patched_adapter_dir() filters them to avoid load-time errors.
+#   - This framework compares base vs hybrid model quality using lightweight,
+#     rule-based heuristics for tasks like summarization, rewriting, code, math.
+# -------------------------------------------------------------
+
+
 import os
 import json
 import shutil
@@ -11,18 +29,29 @@ from peft import PeftModel, LoraConfig
 
 from sft.sft_config import BASE_MODEL_NAME
 
-DATA_PATH = "data/processed/sft_val.jsonl"
+
+# -------------------------------------------------------------
+# File paths and evaluation settings
+# -------------------------------------------------------------
+DATA_PATH = "data/processed/sft_val.jsonl"  # Evaluation dataset
 RESULTS_DIR = "evaluation/results"
 RESULTS_PATH = os.path.join(RESULTS_DIR, "hybrid_eval_output.txt")
 
 HYBRID_OUTPUT_DIR = "models/hybrid_output"
 
+# Hybrid adapter directory and patched copy for evaluation
 ORIG_ADAPTER_DIR = HYBRID_OUTPUT_DIR
 PATCHED_ADAPTER_DIR = HYBRID_OUTPUT_DIR + "_eval"
 
+# Example processing limits and decoding settings
 MAX_EXAMPLES = 100        
 MAX_NEW_TOKENS = 100   
 
+
+# -------------------------------------------------------------
+# Tokenizer loader
+# -------------------------------------------------------------
+# Ensures pad_token exists and right-padding is used so generation runs cleanly.
 def get_tokenizer():
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_NAME, use_fast=True)
     if tokenizer.pad_token is None:
@@ -31,6 +60,10 @@ def get_tokenizer():
     return tokenizer
 
 
+# -------------------------------------------------------------
+# Load the base pretrained language model
+# -------------------------------------------------------------
+# This provides the comparison reference for hybrid evaluation.
 def load_base_model():
     dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
@@ -43,6 +76,16 @@ def load_base_model():
     return model
 
 
+# -------------------------------------------------------------
+# Adapter config sanitation for evaluation
+# -------------------------------------------------------------
+# DPO/HYBRID training may produce adapter_config.json containing keys
+# not recognized by the LoraConfig constructor.
+#
+# This function:
+#   - Creates a new evaluation adapter directory
+#   - Copies files from the original adapter dir
+#   - Filters adapter_config.json to only include valid LoRA parameters
 def prepare_patched_adapter_dir():
     """Copy adapter weights and strip unknown config keys so Peft can load."""
     if os.path.exists(PATCHED_ADAPTER_DIR):
@@ -57,6 +100,7 @@ def prepare_patched_adapter_dir():
         src = os.path.join(ORIG_ADAPTER_DIR, fname)
         dst = os.path.join(PATCHED_ADAPTER_DIR, fname)
 
+        # Filter adapter_config.json
         if fname == "adapter_config.json":
             with open(src, "r", encoding="utf-8") as f:
                 cfg = json.load(f)
@@ -68,6 +112,8 @@ def prepare_patched_adapter_dir():
 
             with open(dst, "w", encoding="utf-8") as f:
                 json.dump(filtered, f, indent=2)
+
+        # Copy all other files/folders directly
         else:
             if os.path.isdir(src):
                 shutil.copytree(src, dst, dirs_exist_ok=True)
@@ -77,14 +123,18 @@ def prepare_patched_adapter_dir():
     return PATCHED_ADAPTER_DIR
 
 
+# -------------------------------------------------------------
+# Load HYBRID model = Base model + patched LoRA adapter
+# -------------------------------------------------------------
+# Unlike base model loading, device_map=None is used to keep the entire model
+# on one device — important for PEFT adapter merging.
 def load_hybrid_model():
     dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
-    # Load a fresh base model WITHOUT device_map="auto"
     base_model = AutoModelForCausalLM.from_pretrained(
         BASE_MODEL_NAME,
         torch_dtype=dtype,
-        device_map=None,  # keep full model on one device
+        device_map=None,  # keep model on one device
     )
 
     if torch.cuda.is_available():
@@ -102,6 +152,11 @@ def load_hybrid_model():
     model.eval()
     return model
 
+
+# -------------------------------------------------------------
+# JSONL reader
+# -------------------------------------------------------------
+# Loads one example per line as a dictionary.
 def read_jsonl(path: str) -> Iterator[Dict[str, Any]]:
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
@@ -111,6 +166,11 @@ def read_jsonl(path: str) -> Iterator[Dict[str, Any]]:
             yield json.loads(line)
 
 
+# -------------------------------------------------------------
+# Model text generation wrapper
+# -------------------------------------------------------------
+# Applies the chat template, encodes prompt, runs deterministic decoding
+# (temperature=0), and returns the generated text.
 def generate(model, tokenizer, prompt: str, max_new_tokens: int = MAX_NEW_TOKENS) -> str:
     messages = [{"role": "user", "content": prompt}]
 
@@ -132,11 +192,19 @@ def generate(model, tokenizer, prompt: str, max_new_tokens: int = MAX_NEW_TOKENS
             pad_token_id=tokenizer.pad_token_id,
         )
 
+    # Extract only newly generated portion
     generated = output[0][inputs["input_ids"].shape[1]:]
     text = tokenizer.decode(generated, skip_special_tokens=True).strip()
     return text
 
 
+# -------------------------------------------------------------
+# Parse Alpaca-style instruction with optional input field
+# -------------------------------------------------------------
+# Extracts the "instruction" and "input" from standardized prompt format:
+#   ### Instruction:
+#   ### Input:
+#   ### Response:
 def parse_instruction_and_input(prompt: str) -> Tuple[str, str]:
     """
     Split the Alpaca-style prompt into (instruction, input_text).
@@ -167,22 +235,31 @@ def parse_instruction_and_input(prompt: str) -> Tuple[str, str]:
 
     return instr, inp
 
+
+# -------------------------------------------------------------
+# Text normalization utilities used for scoring heuristics
+# -------------------------------------------------------------
 def _normalize(text: str) -> str:
     text = text.lower()
     text = re.sub(r"[^a-z0-9\s]", " ", text)
     text = " ".join(text.split())
     return text
 
-
 def _token_set(text: str):
     return set(_normalize(text).split()) if text else set()
-
 
 def sentence_count(text: str) -> int:
     parts = re.split(r"[.!?]+", text)
     return len([p for p in parts if p.strip()])
 
 
+# -------------------------------------------------------------
+# Heuristic scoring rules
+# -------------------------------------------------------------
+# Each rule corresponds to a specific class of instructions:
+# summarization, rewriting, essay tasks, coding tasks, math, titles, etc.
+# If a rule does not apply to the instruction, it returns None.
+# -------------------------------------------------------------
 def summary_rule(instr: str, inp: str, out: str) -> Optional[float]:
     instr_l = instr.lower()
     if "summary" not in instr_l and "summarize" not in instr_l:
@@ -351,6 +428,7 @@ def title_rule(instr: str, inp: str, out: str) -> Optional[float]:
     return max(0.0, min(1.0, score))
 
 
+# Fallback relevance-based score if no specialized rule applies
 def generic_relevance_rule(instr: str, inp: str, out: str, reference: str) -> float:
     context = " ".join([instr, inp, reference])
     ctx_tokens = _token_set(context)
@@ -363,6 +441,12 @@ def generic_relevance_rule(instr: str, inp: str, out: str, reference: str) -> fl
     return overlap / len(ctx_tokens)
 
 
+# -------------------------------------------------------------
+# Unified scoring interface: combines specific + generic rules
+# -------------------------------------------------------------
+# Output:
+#   - final_score: float
+#   - used_special_rule: bool
 def eval_instruction_following(prompt: str, output: str, reference: str) -> Tuple[float, bool]:
     instr, inp = parse_instruction_and_input(prompt)
 
@@ -398,9 +482,14 @@ def eval_instruction_following(prompt: str, output: str, reference: str) -> Tupl
     final_score = 0.7 * spec_score + 0.3 * rel_score
     return final_score, True
 
+
+# -------------------------------------------------------------
+# Main evaluation loop
+# -------------------------------------------------------------
 def main():
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
+    # Dataset check
     if not os.path.exists(DATA_PATH):
         raise FileNotFoundError(
             f"Could not find evaluation data at {DATA_PATH}. "
@@ -425,11 +514,13 @@ def main():
     sum_spec_base = 0.0
     sum_spec_hybrid = 0.0
 
+    # Open results file
     with open(RESULTS_PATH, "w", encoding="utf-8") as out_f:
         out_f.write(
             "Heuristic IF-style evaluation on dataset: {}\n\n".format(DATA_PATH)
         )
 
+        # Iterate examples
         for i, example in enumerate(read_jsonl(DATA_PATH), start=1):
             if MAX_EXAMPLES is not None and i > MAX_EXAMPLES:
                 break
@@ -456,6 +547,7 @@ def main():
                 sum_spec_base += base_score
                 sum_spec_hybrid += hybrid_score
 
+            # Write full example block to file
             out_f.write("=" * 100 + "\n")
             out_f.write(f"EXAMPLE {i}\n")
             out_f.write("PROMPT:\n{}\n\n".format(prompt))
@@ -468,6 +560,7 @@ def main():
             if i % 5 == 0:
                 print(f"Processed {i} examples...")
 
+        # Summary block
         out_f.write("=" * 100 + "\n")
         out_f.write("SUMMARY\n")
         out_f.write(f"Total examples evaluated: {total}\n")
@@ -489,6 +582,7 @@ def main():
                 f"Hybrid avg heuristic score (special-rule subset): {avg_spec_hybrid:.3f}\n"
             )
 
+    # Console summary
     print(f"\nDone. Wrote detailed outputs to {RESULTS_PATH}")
     print(f"Total examples evaluated: {total}")
     if total > 0:
@@ -504,5 +598,8 @@ def main():
         print(f"Hybrid avg heuristic score (special subset): {avg_spec_hybrid:.3f}")
 
 
+# -------------------------------------------------------------
+# Entrypoint
+# -------------------------------------------------------------
 if __name__ == "__main__":
     main()

@@ -1,3 +1,22 @@
+# -------------------------------------------------------------
+# sft_eval.py
+# -------------------------------------------------------------
+# Purpose:
+#   - Evaluate a Supervised Fine-Tuned (SFT) model against the base model.
+#   - Generate outputs from both models on a validation dataset.
+#   - Score outputs using heuristic instruction-following evaluation rules.
+#   - Write detailed per-example logs and overall summary results.
+#
+# Notes:
+#   - Evaluation only; no training occurs here.
+#   - The LoRA adapter folder created during SFT training may include keys
+#     not recognized by PEFT during loading; prepare_patched_adapter_dir()
+#     sanitizes the adapter_config.json to avoid load errors.
+#   - The scoring pipeline is consistent with hybrid_eval.py and dpo_eval.py,
+#     allowing direct comparison between SFT, DPO, and Hybrid models.
+# -------------------------------------------------------------
+
+
 import os
 import json
 import shutil
@@ -9,19 +28,31 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel, LoraConfig
 
+# Base TinyLlama model + the SFT output directory
 from sft.sft_config import BASE_MODEL_NAME, OUTPUT_DIR
 
 
-DATA_PATH = "data/processed/sft_val.jsonl" # evaluation dataset
+# -------------------------------------------------------------
+# Paths and Evaluation Configuration
+# -------------------------------------------------------------
+DATA_PATH = "data/processed/sft_val.jsonl"  # Evaluation dataset
 RESULTS_DIR = "evaluation/results"
 RESULTS_PATH = os.path.join(RESULTS_DIR, "sft_eval_output.txt")
 
-ORIG_ADAPTER_DIR = OUTPUT_DIR           
-PATCHED_ADAPTER_DIR = OUTPUT_DIR + "_eval" 
+# Original LoRA adapter directory from SFT training
+ORIG_ADAPTER_DIR = OUTPUT_DIR
+# Cleaned/filtered version to fix unsupported LoRA config keys
+PATCHED_ADAPTER_DIR = OUTPUT_DIR + "_eval"
 
-MAX_EXAMPLES = 100 # set to None to eval full file
-MAX_NEW_TOKENS = 100 # how long each answer can be
+# Control how many samples to evaluate and how long generations are
+MAX_EXAMPLES = 100                     # Set to None for full evaluation
+MAX_NEW_TOKENS = 100                   # Max tokens to generate per answer
 
+
+# -------------------------------------------------------------
+# Tokenizer Loader
+# -------------------------------------------------------------
+# Ensures the chat tokenizer is configured with padding tokens and right padding.
 def get_tokenizer():
     tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_NAME, use_fast=True)
     if tokenizer.pad_token is None:
@@ -30,6 +61,10 @@ def get_tokenizer():
     return tokenizer
 
 
+# -------------------------------------------------------------
+# Load the Base (Unfine-tuned) Model
+# -------------------------------------------------------------
+# Used to establish a performance baseline against the SFT model.
 def load_base_model():
     dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
@@ -42,6 +77,11 @@ def load_base_model():
     return model
 
 
+# -------------------------------------------------------------
+# Patch and Sanitize the Adapter Directory
+# -------------------------------------------------------------
+# Some LoRA config keys in SFT outputs are not compatible with PEFT.
+# Unsupported keys are removed so the evaluation adapter loads safely.
 def prepare_patched_adapter_dir():
     """Copy adapter weights and strip unknown config keys so Peft can load."""
     if os.path.exists(PATCHED_ADAPTER_DIR):
@@ -56,10 +96,12 @@ def prepare_patched_adapter_dir():
         src = os.path.join(ORIG_ADAPTER_DIR, fname)
         dst = os.path.join(PATCHED_ADAPTER_DIR, fname)
 
+        # Only adapter_config.json requires filtering.
         if fname == "adapter_config.json":
             with open(src, "r", encoding="utf-8") as f:
                 cfg = json.load(f)
 
+            # Keep only supported LoRA parameters.
             filtered = {k: v for k, v in cfg.items() if k in allowed_keys}
             dropped = sorted(set(cfg.keys()) - set(filtered.keys()))
             if dropped:
@@ -67,7 +109,9 @@ def prepare_patched_adapter_dir():
 
             with open(dst, "w", encoding="utf-8") as f:
                 json.dump(filtered, f, indent=2)
+
         else:
+            # Copy folder contents or single files directly
             if os.path.isdir(src):
                 shutil.copytree(src, dst, dirs_exist_ok=True)
             else:
@@ -76,6 +120,9 @@ def prepare_patched_adapter_dir():
     return PATCHED_ADAPTER_DIR
 
 
+# -------------------------------------------------------------
+# Load SFT Model: Base + Patched LoRA Adapter
+# -------------------------------------------------------------
 def load_sft_model():
     base_model = load_base_model()
     patched = prepare_patched_adapter_dir()
@@ -84,6 +131,10 @@ def load_sft_model():
     model.eval()
     return model
 
+
+# -------------------------------------------------------------
+# Utility: Read JSONL Dataset
+# -------------------------------------------------------------
 def read_jsonl(path: str) -> Iterator[Dict[str, Any]]:
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
@@ -93,11 +144,14 @@ def read_jsonl(path: str) -> Iterator[Dict[str, Any]]:
             yield json.loads(line)
 
 
+# -------------------------------------------------------------
+# Generation Wrapper
+# -------------------------------------------------------------
+# Applies HF chat template, runs deterministic decoding (temp=0),
+# strips prompt portion, returns clean generated text.
 def generate(model, tokenizer, prompt: str, max_new_tokens: int = MAX_NEW_TOKENS) -> str:
-    # Wrap as a single user message
     messages = [{"role": "user", "content": prompt}]
 
-    # Convert to chat-format text (adds BOS, role tokens, etc.)
     formatted = tokenizer.apply_chat_template(
         messages,
         tokenize=False,
@@ -116,19 +170,22 @@ def generate(model, tokenizer, prompt: str, max_new_tokens: int = MAX_NEW_TOKENS
             pad_token_id=tokenizer.pad_token_id,
         )
 
-    # Strip off the prompt portion
+    # Slice off the input token portion, keeping generated output only
     generated = output[0][inputs["input_ids"].shape[1]:]
 
     text = tokenizer.decode(generated, skip_special_tokens=True).strip()
 
-    # if the model produced nothing, at least let us see that.
+    # Ensure empty model output is handled visibly
     if text == "":
         text = ""
 
     return text
 
 
-
+# -------------------------------------------------------------
+# Parse Alpaca-Style Prompt: Extract Instruction & Input
+# -------------------------------------------------------------
+# Used to determine which heuristic rules apply to a given prompt.
 def parse_instruction_and_input(prompt: str) -> Tuple[str, str]:
     """
     Expected format:
@@ -158,21 +215,32 @@ def parse_instruction_and_input(prompt: str) -> Tuple[str, str]:
 
     return instr, inp
 
+
+# -------------------------------------------------------------
+# Token / Text Utilities for Scoring Rules
+# -------------------------------------------------------------
 def _normalize(text: str) -> str:
     text = text.lower()
     text = re.sub(r"[^a-z0-9\s]", " ", text)
     text = " ".join(text.split())
     return text
 
-
 def _token_set(text: str):
     return set(_normalize(text).split()) if text else set()
-
 
 def sentence_count(text: str) -> int:
     parts = re.split(r"[.!?]+", text)
     return len([p for p in parts if p.strip()])
 
+
+# -------------------------------------------------------------
+# Heuristic Scoring Rules
+# -------------------------------------------------------------
+# Each rule determines whether it applies to the instruction + output.
+# If applicable, returns score ∈ [0,1]; otherwise returns None.
+# These rules measure correctness for: summarization, rewriting,
+# essays, code generation, math questions, titles, etc.
+# -------------------------------------------------------------
 
 def summary_rule(instr: str, inp: str, out: str) -> Optional[float]:
     instr_l = instr.lower()
@@ -181,19 +249,15 @@ def summary_rule(instr: str, inp: str, out: str) -> Optional[float]:
     if not inp:
         return None
 
-    # output should be shorter than input and share key words
     if len(out.strip()) == 0:
         return 0.0
+
     len_ratio = min(1.0, len(inp) / max(len(out), 1))
 
     inp_tokens = _token_set(inp)
     out_tokens = _token_set(out)
-    if not inp_tokens or not out_tokens:
-        overlap = 0.0
-    else:
-        overlap = len(inp_tokens & out_tokens) / len(inp_tokens)
+    overlap = 0.0 if not inp_tokens or not out_tokens else len(inp_tokens & out_tokens) / len(inp_tokens)
 
-    # average of length score and content overlap
     return 0.5 * len_ratio + 0.5 * overlap
 
 
@@ -207,18 +271,11 @@ def negative_rewrite_rule(instr: str, inp: str, out: str) -> Optional[float]:
     neg_words = ["not", "no", "never", "bad", "poor", "terrible", "awful", "worse", "worst"]
     has_negative = any(w in out.lower() for w in neg_words)
 
-    # require some lexical overlap with input too
     inp_tokens = _token_set(inp)
     out_tokens = _token_set(out)
-    if not inp_tokens or not out_tokens:
-        overlap = 0.0
-    else:
-        overlap = len(inp_tokens & out_tokens) / len(inp_tokens)
+    overlap = 0.0 if not inp_tokens or not out_tokens else len(inp_tokens & out_tokens) / len(inp_tokens)
 
-    score = 0.0
-    if has_negative:
-        score += 0.6
-    score += 0.4 * overlap
+    score = 0.6 * has_negative + 0.4 * overlap
     return score
 
 
@@ -231,7 +288,6 @@ def essay_rule(instr: str, inp: str, out: str) -> Optional[float]:
     if length == 0:
         return 0.0
 
-    # want at least 3 sentences, reward more length up to a point
     score = 0.0
     if s_count >= 3:
         score += 0.6
@@ -242,15 +298,12 @@ def essay_rule(instr: str, inp: str, out: str) -> Optional[float]:
 def java_code_rule(instr: str, inp: str, out: str) -> Optional[float]:
     if "java" not in instr.lower():
         return None
+
     out_l = out.lower()
     if len(out_l.strip()) == 0:
         return 0.0
 
-    patterns = [
-        "class ",
-        "public static void main",
-        "system.out.println"
-    ]
+    patterns = ["class ", "public static void main", "system.out.println"]
     hits = sum(1 for p in patterns if p in out_l)
     return hits / len(patterns)
 
@@ -259,16 +312,12 @@ def javascript_code_rule(instr: str, inp: str, out: str) -> Optional[float]:
     instr_l = instr.lower()
     if "javascript" not in instr_l and "java script" not in instr_l:
         return None
+
     out_l = out.lower()
     if len(out_l.strip()) == 0:
         return 0.0
 
-    patterns = [
-        "function ",
-        "console.log",
-        "let ",
-        "const "
-    ]
+    patterns = ["function ", "console.log", "let ", "const "]
     hits = sum(1 for p in patterns if p in out_l)
     return hits / len(patterns)
 
@@ -284,11 +333,7 @@ def python_class_rule(instr: str, inp: str, out: str) -> Optional[float]:
     if len(out_l.strip()) == 0:
         return 0.0
 
-    patterns = [
-        "class ",
-        "def __init__",
-        "self."
-    ]
+    patterns = ["class ", "def __init__", "self."]
     hits = sum(1 for p in patterns if p in out_l)
     return hits / len(patterns)
 
@@ -298,16 +343,16 @@ def calculation_rule(instr: str, inp: str, out: str, reference: str) -> Optional
     if "calculate" not in instr_l and "compute" not in instr_l and "find the area" not in instr_l:
         return None
 
-    # parse numbers from reference and output, give credit if one matches
     ref_nums = re.findall(r"-?\d+\.?\d*", reference)
     out_nums = re.findall(r"-?\d+\.?\d*", out)
+
     if not out_nums:
         return 0.0
+
     if not ref_nums:
-        # cannot align with reference, but at least has a number
         return 0.5
 
-    # check if any number matches exactly
+    # Exact numeric match yields full credit
     for rn in ref_nums:
         for on in out_nums:
             try:
@@ -315,7 +360,7 @@ def calculation_rule(instr: str, inp: str, out: str, reference: str) -> Optional
                     return 1.0
             except ValueError:
                 continue
-    # partial credit for having some number at all
+
     return 0.5
 
 
@@ -323,15 +368,11 @@ def question_generation_rule(instr: str, inp: str, out: str) -> Optional[float]:
     instr_l = instr.lower()
     if "question to ask a bot" not in instr_l and "generate an appropriate question" not in instr_l:
         return None
+
     if len(out.strip()) == 0:
         return 0.0
 
-    score = 0.0
-    if "?" in out:
-        score += 0.7
-    # short-ish, single question preferred
-    if len(out.split()) <= 25:
-        score += 0.3
+    score = 0.7 * ("?" in out) + 0.3 * (len(out.split()) <= 25)
     return min(score, 1.0)
 
 
@@ -339,24 +380,25 @@ def title_rule(instr: str, inp: str, out: str) -> Optional[float]:
     instr_l = instr.lower()
     if "professional title" not in instr_l and "title" not in instr_l:
         return None
+
     tokens = out.strip().split()
     if not tokens:
         return 0.0
 
-    # prefer short, capitalized phrases
-    length_penalty = max(0.0, 1.0 - (len(tokens) - 3) * 0.2)  # ideal ~3 words
-    capitalized_tokens = sum(1 for t in tokens if t[:1].isupper())
-    cap_ratio = capitalized_tokens / max(len(tokens), 1)
+    length_penalty = max(0.0, 1.0 - (len(tokens) - 3) * 0.2)
+    cap_ratio = sum(1 for t in tokens if t[:1].isupper()) / max(len(tokens), 1)
 
-    score = 0.5 * length_penalty + 0.5 * cap_ratio
-    return max(0.0, min(1.0, score))
+    return max(0.0, min(1.0, 0.5 * length_penalty + 0.5 * cap_ratio))
 
 
+# -------------------------------------------------------------
+# Generic Fallback Rule
+# -------------------------------------------------------------
+# Applies lexical overlap relevance regardless of task type.
 def generic_relevance_rule(instr: str, inp: str, out: str, reference: str) -> float:
     """
-    Fallback: measure simple lexical relevance between output
-    and (instruction + input + reference).
-    Always returns a score in [0,1].
+    Fallback: measure lexical similarity between output and
+    (instruction + input + reference).
     """
     context = " ".join([instr, inp, reference])
     ctx_tokens = _token_set(context)
@@ -365,20 +407,21 @@ def generic_relevance_rule(instr: str, inp: str, out: str, reference: str) -> fl
     if not ctx_tokens or not out_tokens:
         return 0.0
 
-    overlap = len(ctx_tokens & out_tokens)
-    return overlap / len(ctx_tokens)
+    return len(ctx_tokens & out_tokens) / len(ctx_tokens)
 
 
+# -------------------------------------------------------------
+# Combined Instruction-Following Evaluation
+# -------------------------------------------------------------
+# Returns:
+#   - final score in [0,1]
+#   - used_special_rules (bool)
 def eval_instruction_following(prompt: str, output: str, reference: str) -> Tuple[float, bool]:
-    """
-    Returns (score in [0,1], used_special_rules: bool).
-    Combines several heuristic rules; if none apply, falls back to generic relevance.
-    """
     instr, inp = parse_instruction_and_input(prompt)
 
     scores = []
 
-    # specialized rules
+    # Apply specialized rules in order
     for rule_fn in [
         summary_rule,
         negative_rewrite_rule,
@@ -390,11 +433,10 @@ def eval_instruction_following(prompt: str, output: str, reference: str) -> Tupl
         question_generation_rule,
         title_rule,
     ]:
-        try:
-            val = rule_fn(instr, inp, output) if rule_fn is not calculation_rule else rule_fn(instr, inp, output, reference)
-        except TypeError:
-            # for safety if signature mismatch
-            val = None
+        if rule_fn is calculation_rule:
+            val = rule_fn(instr, inp, output, reference)
+        else:
+            val = rule_fn(instr, inp, output)
 
         if val is not None:
             scores.append(val)
@@ -402,19 +444,22 @@ def eval_instruction_following(prompt: str, output: str, reference: str) -> Tupl
     used_special = len(scores) > 0
 
     if not scores:
-        # fallback relevance-only
-        score = generic_relevance_rule(instr, inp, output, reference)
-        return score, False
+        # No specialized rule applies → fallback
+        return generic_relevance_rule(instr, inp, output, reference), False
 
-    # average of all applicable specialized scores, but mixed with relevance for robustness
     spec_score = sum(scores) / len(scores)
     rel_score = generic_relevance_rule(instr, inp, output, reference)
-    final_score = 0.7 * spec_score + 0.3 * rel_score
-    return final_score, True
 
+    return 0.7 * spec_score + 0.3 * rel_score, True
+
+
+# -------------------------------------------------------------
+# Main Evaluation Loop
+# -------------------------------------------------------------
 def main():
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
+    # Ensure dataset exists
     if not os.path.exists(DATA_PATH):
         raise FileNotFoundError(
             f"Could not find evaluation data at {DATA_PATH}. "
@@ -432,6 +477,7 @@ def main():
     sft_model = load_sft_model()
     print("SFT model loaded.")
 
+    # Metrics
     total = 0
     sum_score_base = 0.0
     sum_score_sft = 0.0
@@ -439,10 +485,9 @@ def main():
     sum_spec_base = 0.0
     sum_spec_sft = 0.0
 
+    # Results file
     with open(RESULTS_PATH, "w", encoding="utf-8") as out_f:
-        out_f.write(
-            "Heuristic IF-style evaluation on dataset: {}\n\n".format(DATA_PATH)
-        )
+        out_f.write("Heuristic IF-style evaluation on dataset: {}\n\n".format(DATA_PATH))
 
         for i, example in enumerate(read_jsonl(DATA_PATH), start=1):
             if MAX_EXAMPLES is not None and i > MAX_EXAMPLES:
@@ -470,7 +515,7 @@ def main():
                 sum_spec_base += base_score
                 sum_spec_sft += sft_score
 
-            # write detailed outputs
+            # Write detailed example output
             out_f.write("=" * 100 + "\n")
             out_f.write(f"EXAMPLE {i}\n")
             out_f.write("PROMPT:\n{}\n\n".format(prompt))
@@ -483,7 +528,7 @@ def main():
             if i % 5 == 0:
                 print(f"Processed {i} examples...")
 
-        # summary
+        # Summary block
         out_f.write("=" * 100 + "\n")
         out_f.write("SUMMARY\n")
         out_f.write(f"Total examples evaluated: {total}\n")
@@ -495,24 +540,25 @@ def main():
             out_f.write(f"SFT avg heuristic score (all examples): {avg_sft:.3f}\n")
 
         out_f.write(f"Examples with specialized rules applied to both models: {special_examples}\n")
+
         if special_examples > 0:
             avg_spec_base = sum_spec_base / special_examples
             avg_spec_sft = sum_spec_sft / special_examples
-            out_f.write(
-                f"Base avg heuristic score (special-rule subset): {avg_spec_base:.3f}\n"
-            )
-            out_f.write(
-                f"SFT avg heuristic score (special-rule subset): {avg_spec_sft:.3f}\n"
-            )
+            out_f.write(f"Base avg heuristic score (special-rule subset): {avg_spec_base:.3f}\n")
+            out_f.write(f"SFT avg heuristic score (special-rule subset): {avg_spec_sft:.3f}\n")
 
+    # Console summary
     print(f"\nDone. Wrote detailed outputs to {RESULTS_PATH}")
     print(f"Total examples evaluated: {total}")
+
     if total > 0:
         avg_base = sum_score_base / total
         avg_sft = sum_score_sft / total
         print(f"Base avg heuristic score (all examples): {avg_base:.3f}")
         print(f"SFT avg heuristic score (all examples): {avg_sft:.3f}")
+
     print(f"Examples with specialized rules applied to both models: {special_examples}")
+
     if special_examples > 0:
         avg_spec_base = sum_spec_base / special_examples
         avg_spec_sft = sum_spec_sft / special_examples
@@ -520,5 +566,8 @@ def main():
         print(f"SFT avg heuristic score (special subset): {avg_spec_sft:.3f}")
 
 
+# -------------------------------------------------------------
+# Entrypoint
+# -------------------------------------------------------------
 if __name__ == "__main__":
     main()
